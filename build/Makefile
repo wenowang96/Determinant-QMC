@@ -1,6 +1,6 @@
 CC = icc
 
-CFLAGS = -std=gnu11 -Wall -Wextra -Ofast -xHost
+CFLAGS = -std=gnu11 -Wall -Wextra -Ofast -axIVYBRIDGE,HASWELL,BROADWELL,SKYLAKE,SKYLAKE-AVX512
 CFLAGS += -DMKL_DIRECT_CALL_SEQ -mkl=sequential
 CFLAGS += -DGIT_ID=\"$(shell git describe --always)\"
 CFLAGS += -DPROFILE_ENABLE
