@@ -5,18 +5,18 @@
 struct params {
 	int N, L;
 	int *map_i, *map_ij;
-	int *bonds, *map_bs, *map_bb;
+	int *bonds, *bond2s, *map_bs, *map_bb, *map_b2b2;
 //	double *K, *U;
 //	double dt;
 
 	int n_matmul, n_delay;
 	int n_sweep_warm, n_sweep_meas;
 	int period_eqlt, period_uneqlt;
-	int meas_bond_corr, meas_energy_corr, meas_nematic_corr;
+	int meas_bond_corr, meas_2bond_corr, meas_energy_corr, meas_nematic_corr;
 
 	int num_i, num_ij;
-	int num_b, num_bs, num_bb;
-	int *degen_i, *degen_ij, *degen_bs, *degen_bb;
+	int num_b, num_b2, num_bs, num_bb, num_b2b2;
+	int *degen_i, *degen_ij, *degen_bs, *degen_bb, *degen_b2b2;
 	double *exp_K, *inv_exp_K;
 	double *exp_halfK, *inv_exp_halfK;
 	double *exp_lambda, *del;
@@ -56,6 +56,9 @@ struct meas_uneqlt {
 	double *pair_bb;
 	double *jj, *jsjs;
 	double *kk, *ksks;
+	double *pair_b2b2;
+	double *j2j2, *js2js2;
+	double *k2k2, *ks2ks2;
 	double *kv, *kn, *vv, *vn;
 	double *nem_nnnn, *nem_ssss;
 };

@@ -287,6 +287,55 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 	}
 	}
 
+	if (meas_2bond_corr)
+	for (int c = 0; c < num_b2; c++) {
+		const int j0 = p->bond2s[c];
+		const int j1 = p->bond2s[c + num_b2];
+	for (int b = 0; b < num_b2; b++) {
+		const int i0 = p->bond2s[b];
+		const int i1 = p->bond2s[b + num_b2];
+		const int bb = p->map_b2b2[b + c*num_b2];
+		const double pre = (double)sign / p->degen_b2b2[bb];
+		const int delta_i0j0 = (i0 == j0);
+		const int delta_i1j0 = (i1 == j0);
+		const int delta_i0j1 = (i0 == j1);
+		const int delta_i1j1 = (i1 == j1);
+		const double gui1i0 = Gu00[i1 + i0*N];
+		const double gui0i1 = Gu00[i0 + i1*N];
+		const double gui0j0 = Gu00[i0 + j0*N];
+		const double gui1j0 = Gu00[i1 + j0*N];
+		const double gui0j1 = Gu00[i0 + j1*N];
+		const double gui1j1 = Gu00[i1 + j1*N];
+		const double guj0i0 = Gu00[j0 + i0*N];
+		const double guj1i0 = Gu00[j1 + i0*N];
+		const double guj0i1 = Gu00[j0 + i1*N];
+		const double guj1i1 = Gu00[j1 + i1*N];
+		const double guj1j0 = Gu00[j1 + j0*N];
+		const double guj0j1 = Gu00[j0 + j1*N];
+		const double gdi1i0 = Gd00[i1 + i0*N];
+		const double gdi0i1 = Gd00[i0 + i1*N];
+		const double gdi0j0 = Gd00[i0 + j0*N];
+		const double gdi1j0 = Gd00[i1 + j0*N];
+		const double gdi0j1 = Gd00[i0 + j1*N];
+		const double gdi1j1 = Gd00[i1 + j1*N];
+		const double gdj0i0 = Gd00[j0 + i0*N];
+		const double gdj1i0 = Gd00[j1 + i0*N];
+		const double gdj0i1 = Gd00[j0 + i1*N];
+		const double gdj1i1 = Gd00[j1 + i1*N];
+		const double gdj1j0 = Gd00[j1 + j0*N];
+		const double gdj0j1 = Gd00[j0 + j1*N];
+		m->pair_b2b2[bb] += 0.5*pre*(gui0j0*gdi1j1 + gui1j0*gdi0j1 + gui0j1*gdi1j0 + gui1j1*gdi0j0);
+		const double x = ((delta_i0j1 - guj1i0)*gui1j0 + (delta_i1j0 - guj0i1)*gui0j1
+				+ (delta_i0j1 - gdj1i0)*gdi1j0 + (delta_i1j0 - gdj0i1)*gdi0j1);
+		const double y = ((delta_i0j0 - guj0i0)*gui1j1 + (delta_i1j1 - guj1i1)*gui0j0
+				+ (delta_i0j0 - gdj0i0)*gdi1j1 + (delta_i1j1 - gdj1i1)*gdi0j0);
+		m->j2j2[bb]   += pre*((gui0i1 - gui1i0 + gdi0i1 - gdi1i0)*(guj0j1 - guj1j0 + gdj0j1 - gdj1j0) + x - y);
+		m->js2js2[bb] += pre*((gui0i1 - gui1i0 - gdi0i1 + gdi1i0)*(guj0j1 - guj1j0 - gdj0j1 + gdj1j0) + x - y);
+		m->k2k2[bb]   += pre*((gui0i1 + gui1i0 + gdi0i1 + gdi1i0)*(guj0j1 + guj1j0 + gdj0j1 + gdj1j0) + x + y);
+		m->ks2ks2[bb] += pre*((gui0i1 + gui1i0 - gdi0i1 - gdi1i0)*(guj0j1 + guj1j0 - gdj0j1 - gdj1j0) + x + y);
+	}
+	}
+
 	if (meas_nematic_corr)
 	for (int c = 0; c < NEM_BONDS*N; c++) {
 		const int j0 = p->bonds[c];
@@ -421,6 +470,68 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 	}
 	}
 	}
+
+    // no delta functions here.
+	if (meas_2bond_corr)
+	#pragma omp parallel for
+	for (int t = 1; t < L; t++) {
+		const double *const restrict Gu0t_t = Gu0t + N*N*t;
+		const double *const restrict Gutt_t = Gutt + N*N*t;
+		const double *const restrict Gut0_t = Gut0 + N*N*t;
+		const double *const restrict Gd0t_t = Gd0t + N*N*t;
+		const double *const restrict Gdtt_t = Gdtt + N*N*t;
+		const double *const restrict Gdt0_t = Gdt0 + N*N*t;
+	for (int c = 0; c < num_b2; c++) {
+		const int j0 = p->bond2s[c];
+		const int j1 = p->bond2s[c + num_b2];
+	for (int b = 0; b < num_b2; b++) {
+		const int i0 = p->bond2s[b];
+		const int i1 = p->bond2s[b + num_b2];
+		const int bb = p->map_b2b2[b + c*num_b2];
+		const double pre = (double)sign / p->degen_b2b2[bb];
+		const double gui0i0 = Gutt_t[i0 + i0*N];
+		const double gui1i0 = Gutt_t[i1 + i0*N];
+		const double gui0i1 = Gutt_t[i0 + i1*N];
+		const double gui1i1 = Gutt_t[i1 + i1*N];
+		const double gui0j0 = Gut0_t[i0 + j0*N];
+		const double gui1j0 = Gut0_t[i1 + j0*N];
+		const double gui0j1 = Gut0_t[i0 + j1*N];
+		const double gui1j1 = Gut0_t[i1 + j1*N];
+		const double guj0i0 = Gu0t_t[j0 + i0*N];
+		const double guj1i0 = Gu0t_t[j1 + i0*N];
+		const double guj0i1 = Gu0t_t[j0 + i1*N];
+		const double guj1i1 = Gu0t_t[j1 + i1*N];
+		const double guj0j0 = Gu00[j0 + j0*N];
+		const double guj1j0 = Gu00[j1 + j0*N];
+		const double guj0j1 = Gu00[j0 + j1*N];
+		const double guj1j1 = Gu00[j1 + j1*N];
+		const double gdi0i0 = Gdtt_t[i0 + i0*N];
+		const double gdi1i0 = Gdtt_t[i1 + i0*N];
+		const double gdi0i1 = Gdtt_t[i0 + i1*N];
+		const double gdi1i1 = Gdtt_t[i1 + i1*N];
+		const double gdi0j0 = Gdt0_t[i0 + j0*N];
+		const double gdi1j0 = Gdt0_t[i1 + j0*N];
+		const double gdi0j1 = Gdt0_t[i0 + j1*N];
+		const double gdi1j1 = Gdt0_t[i1 + j1*N];
+		const double gdj0i0 = Gd0t_t[j0 + i0*N];
+		const double gdj1i0 = Gd0t_t[j1 + i0*N];
+		const double gdj0i1 = Gd0t_t[j0 + i1*N];
+		const double gdj1i1 = Gd0t_t[j1 + i1*N];
+		const double gdj0j0 = Gd00[j0 + j0*N];
+		const double gdj1j0 = Gd00[j1 + j0*N];
+		const double gdj0j1 = Gd00[j0 + j1*N];
+		const double gdj1j1 = Gd00[j1 + j1*N];
+		m->pair_b2b2[bb + num_bb*t] += 0.5*pre*(gui0j0*gdi1j1 + gui1j0*gdi0j1 + gui0j1*gdi1j0 + gui1j1*gdi0j0);
+		const double x = -guj1i0*gui1j0 - guj0i1*gui0j1 - gdj1i0*gdi1j0 - gdj0i1*gdi0j1;
+		const double y = -guj0i0*gui1j1 - guj1i1*gui0j0 - gdj0i0*gdi1j1 - gdj1i1*gdi0j0;
+		m->j2j2[bb + num_bb*t]   += pre*((gui0i1 - gui1i0 + gdi0i1 - gdi1i0)*(guj0j1 - guj1j0 + gdj0j1 - gdj1j0) + x - y);
+		m->js2js2[bb + num_bb*t] += pre*((gui0i1 - gui1i0 - gdi0i1 + gdi1i0)*(guj0j1 - guj1j0 - gdj0j1 + gdj1j0) + x - y);
+		m->k2k2[bb + num_bb*t]   += pre*((gui0i1 + gui1i0 + gdi0i1 + gdi1i0)*(guj0j1 + guj1j0 + gdj0j1 + gdj1j0) + x + y);
+		m->ks2ks2[bb + num_bb*t] += pre*((gui0i1 + gui1i0 - gdi0i1 - gdi1i0)*(guj0j1 + guj1j0 - gdj0j1 - gdj1j0) + x + y);
+	}
+	}
+	}
+
 
 	if (meas_nematic_corr)
 	#pragma omp parallel for
