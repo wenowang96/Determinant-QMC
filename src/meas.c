@@ -144,6 +144,7 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 	m->sign += sign;
 	const int N = p->N, L = p->L, num_i = p->num_i, num_ij = p->num_ij;
 	const int num_b = p->num_b, num_bs = p->num_bs, num_bb = p->num_bb;
+        const int num_b2 = p->num_b2, num_b2b2 = p->num_b2b2;
 	const int meas_bond_corr = p->meas_bond_corr;
 	const int meas_2bond_corr = p->meas_2bond_corr;
 	const int meas_energy_corr = p->meas_energy_corr;
