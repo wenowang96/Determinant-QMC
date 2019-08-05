@@ -246,12 +246,12 @@ int sim_data_save(const struct sim_data *sim, const char *file)
 			my_write("/meas_uneqlt/kk",      H5T_NATIVE_DOUBLE, sim->m_ue.kk);
 			my_write("/meas_uneqlt/ksks",    H5T_NATIVE_DOUBLE, sim->m_ue.ksks);
 		}
-        if (sim->p.meas_2bond_corr) {
-			my_write("/meas_uneqlt/pair_b2b2", H5T_NATIVE_DOUBLE, sim->m_ue.pair_bb);
-			my_write("/meas_uneqlt/j2j2",      H5T_NATIVE_DOUBLE, sim->m_ue.jj);
-			my_write("/meas_uneqlt/js2js2",    H5T_NATIVE_DOUBLE, sim->m_ue.jsjs);
-			my_write("/meas_uneqlt/k2k2",      H5T_NATIVE_DOUBLE, sim->m_ue.kk);
-			my_write("/meas_uneqlt/ks2ks2",    H5T_NATIVE_DOUBLE, sim->m_ue.ksks);
+                if (sim->p.meas_2bond_corr) {
+			my_write("/meas_uneqlt/pair_b2b2", H5T_NATIVE_DOUBLE, sim->m_ue.pair_b2b2);
+			my_write("/meas_uneqlt/j2j2",      H5T_NATIVE_DOUBLE, sim->m_ue.j2j2);
+			my_write("/meas_uneqlt/js2js2",    H5T_NATIVE_DOUBLE, sim->m_ue.js2js2);
+			my_write("/meas_uneqlt/k2k2",      H5T_NATIVE_DOUBLE, sim->m_ue.k2k2);
+			my_write("/meas_uneqlt/ks2ks2",    H5T_NATIVE_DOUBLE, sim->m_ue.ks2ks2);
 		}
 		if (sim->p.meas_energy_corr) {
 			my_write("/meas_uneqlt/kv", H5T_NATIVE_DOUBLE, sim->m_ue.kv);
