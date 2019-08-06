@@ -24,10 +24,10 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 	my_read(_int, "/params/num_i",  &sim->p.num_i);
 	my_read(_int, "/params/num_ij", &sim->p.num_ij);
 	my_read(_int, "/params/num_b", &sim->p.num_b);
-	my_read(_int, "/params/num_b2", &sim->p.num_b);
+	my_read(_int, "/params/num_b2", &sim->p.num_b2);
 	my_read(_int, "/params/num_bs", &sim->p.num_bs);
 	my_read(_int, "/params/num_bb", &sim->p.num_bb);
-	my_read(_int, "/params/num_b2b2", &sim->p.num_bb);
+	my_read(_int, "/params/num_b2b2", &sim->p.num_b2b2);
 	my_read(_int, "/params/period_uneqlt", &sim->p.period_uneqlt);
 	my_read(_int, "/params/meas_bond_corr", &sim->p.meas_bond_corr);
 	my_read(_int, "/params/meas_2bond_corr", &sim->p.meas_2bond_corr);
@@ -110,10 +110,10 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 	my_read(_int,    "/params/map_i",          sim->p.map_i);
 	my_read(_int,    "/params/map_ij",         sim->p.map_ij);
 	my_read(_int,    "/params/bonds",          sim->p.bonds);
-	my_read(_int,    "/params/bond2s",          sim->p.bonds);
+	my_read(_int,    "/params/bond2s",          sim->p.bond2s);
 	my_read(_int,    "/params/map_bs",         sim->p.map_bs);
 	my_read(_int,    "/params/map_bb",         sim->p.map_bb);
-	my_read(_int,    "/params/map_b2b2",         sim->p.map_bb);
+	my_read(_int,    "/params/map_b2b2",         sim->p.map_b2b2);
 //	my_read(_double, "/params/K",              sim->p.K);
 //	my_read(_double, "/params/U",              sim->p.U);
 //	my_read(_double, "/params/dt",            &sim->p.dt);
@@ -126,7 +126,7 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 	my_read(_int,    "/params/degen_ij",       sim->p.degen_ij);
 	my_read(_int,    "/params/degen_bs",       sim->p.degen_bs);
 	my_read(_int,    "/params/degen_bb",       sim->p.degen_bb);
-	my_read(_int,    "/params/degen_b2b2",       sim->p.degen_bb);
+	my_read(_int,    "/params/degen_b2b2",       sim->p.degen_b2b2);
 	my_read(_double, "/params/exp_K",          sim->p.exp_K);
 	my_read(_double, "/params/inv_exp_K",      sim->p.inv_exp_K);
 	my_read(_double, "/params/exp_halfK",      sim->p.exp_halfK);
