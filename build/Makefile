@@ -4,7 +4,7 @@ CFLAGS = -std=gnu11 -Wall -Wextra -Ofast -axIVYBRIDGE,HASWELL,BROADWELL,SKYLAKE,
 CFLAGS += -DMKL_DIRECT_CALL_SEQ -mkl=sequential
 CFLAGS += -DGIT_ID=\"$(shell git describe --always)\"
 CFLAGS += -DPROFILE_ENABLE
-CFLAGS += -qopenmp  # to disable openmp, use -qopenmp-stubs
+# CFLAGS += -qopenmp  # to disable openmp, use -qopenmp-stubs
 
 LDFLAGS += -lhdf5 -lhdf5_hl
 
