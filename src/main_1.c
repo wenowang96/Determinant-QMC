@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <omp.h>
+// #include <omp.h>
 #include "dqmc.h"
 #include "time_.h"
 
@@ -12,7 +12,7 @@ static void usage(const char *name)
 
 int main(int argc, char **argv)
 {
-	omp_set_num_threads(2);
+	// omp_set_num_threads(2);
 	char *log_file = NULL;
 	char *max_time = "0";
 	int bench = 0;
