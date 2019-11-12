@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <omp.h>
+// #include <omp.h>
 #include "dqmc.h"
 #include "util.h"
 
@@ -271,7 +271,7 @@ static void push_stack(const char *file, const char *line)
 int main(int argc, char **argv)
 {
 	const tick_t t_start = time_wall();
-	omp_set_num_threads(2);
+	// omp_set_num_threads(2);
 	gethostname(hostname, 64);
 	pid = getpid();
 
