@@ -44,7 +44,7 @@ void measure_eqlt(const struct params *const restrict p, // const int sign,
 			const double nuinuj = (1. - guii)*(1. - gujj) + (delta - guji)*guij;
 // 			const double ndindj = (1. - guii)*(1. - gujj) + (delta - guji)*guij;
 			m->vv[r] += pre*nuinuj*nuinuj;
-			m->vn[r] += pre*(nuinuj*(1. - guii) + (1. - guii)*nuinuj);
+			m->vn[r] += 2*pre*nuinuj*(1. - guii);
 		}
 	}
 
@@ -80,8 +80,10 @@ void measure_eqlt(const struct params *const restrict p, // const int sign,
 // 		const double kd = 2.*delta_i0i1 - gdi0i1 - gdi1i0;
 		const double xu = (delta_i0j - guji0)*gui1j + (delta_i1j - guji1)*gui0j;
 // 		const double xd = (delta_i0j - gdji0)*gdi1j + (delta_i1j - gdji1)*gdi0j;
-		m->kv[bs] += 2*pre*((ku*(1. - gujj) + xu)*(1. - gujj);
-		m->kn[bs] += 2*pre*(ku*(1. - gujj) + xu);
+                const double yu = (1. - gujj);
+                const double zu = ku*yu + xu;
+		m->kv[bs] += 2*pre*zu*yu;
+		m->kn[bs] += 2*pre*zu;
 	}
 
 	// 2 bond measurements
@@ -121,11 +123,9 @@ void measure_eqlt(const struct params *const restrict p, // const int sign,
 // 		const double gdj1i1 = gd[j1 + i1*N];
 // 		const double gdj1j0 = gd[j1 + j0*N];
 // 		const double gdj0j1 = gd[j0 + j1*N];
-		const double x = ((delta_i0j1 - guj1i0)*gui1j0 + (delta_i1j0 - guj0i1)*gui0j1
-		                + (delta_i0j1 - guj1i0)*gui1j0 + (delta_i1j0 - guj0i1)*gui0j1);
-		const double y = ((delta_i0j0 - guj0i0)*gui1j1 + (delta_i1j1 - guj1i1)*gui0j0
-		                + (delta_i0j0 - guj0i0)*gui1j1 + (delta_i1j1 - guj1i1)*gui0j0);
-		m->kk[bb] += pre*((gui0i1 + gui1i0 + gui0i1 + gui1i0)*(guj0j1 + guj1j0 + guj0j1 + guj1j0) + x + y);
+		const double x = 2*((delta_i0j1 - guj1i0)*gui1j0 + (delta_i1j0 - guj0i1)*gui0j1);
+		const double y = 2*((delta_i0j0 - guj0i0)*gui1j1 + (delta_i1j1 - guj1i1)*gui0j0);
+		m->kk[bb] += pre*(4*(gui0i1 + gui1i0)*(guj0j1 + guj1j0) + x + y);
 	}
 	}
 }
@@ -185,7 +185,7 @@ void measure_uneqlt(const struct params *const restrict p, // const int sign,
 			const double nuinuj = (1. - guii)*(1. - gujj) + (delta_tij - guji)*guij;
 			//const double ndindj = (1. - gdii)*(1. - gdjj) + (delta_tij - gdji)*gdij;
 			m->vv[r + num_ij*t] += pre*nuinuj*nuinuj;
-			m->vn[r + num_ij*t] += pre*(nuinuj*(1. - guii) + (1. - guii)*nuinuj);
+			m->vn[r + num_ij*t] += 2*pre*nuinuj*(1. - guii);
 		}
 	}
 	}
@@ -229,8 +229,10 @@ void measure_uneqlt(const struct params *const restrict p, // const int sign,
 // 		const double kd = 2.*delta_i0i1 - gdi0i1 - gdi1i0;
 		const double xu = (delta_i0j - guji0)*gui1j + (delta_i1j - guji1)*gui0j;
 // 		const double xd = (delta_i0j - gdji0)*gdi1j + (delta_i1j - gdji1)*gdi0j;
-		m->kv[bs + num_bs*t] += 2*pre*((ku*(1. - gujj) + xu)*(1. - gujj);
-		m->kn[bs + num_bs*t] += 2*pre*(ku*(1. - gujj) + xu);
+                const double yu = (1. - gujj);
+                const double zu = ku*yu + xu;
+		m->kv[bs + num_bs*t] += 2*pre*zu*yu;
+		m->kn[bs + num_bs*t] += 2*pre*zu;
 	}
 	}
 
@@ -275,15 +277,13 @@ void measure_uneqlt(const struct params *const restrict p, // const int sign,
 // 		const double gdj1i1 = Gd00[j1 + i1*N];
 // 		const double gdj1j0 = Gd00[j1 + j0*N];
 // 		const double gdj0j1 = Gd00[j0 + j1*N];
-		m->pair_bb[bb] += 0.5*pre*(gui0j0*gui1j1 + gui1j0*gui0j1 + gui0j1*gui1j0 + gui1j1*gui0j0);
-		const double x = ((delta_i0j1 - guj1i0)*gui1j0 + (delta_i1j0 - guj0i1)*gui0j1
-				+ (delta_i0j1 - guj1i0)*gui1j0 + (delta_i1j0 - guj0i1)*gui0j1);
-		const double y = ((delta_i0j0 - guj0i0)*gui1j1 + (delta_i1j1 - guj1i1)*gui0j0
-				+ (delta_i0j0 - guj0i0)*gui1j1 + (delta_i1j1 - guj1i1)*gui0j0);
-		m->jj[bb]   += pre*((gui0i1 - gui1i0 + gui0i1 - gui1i0)*(guj0j1 - guj1j0 + guj0j1 - guj1j0) + x - y);
-		m->jsjs[bb] += pre*((gui0i1 - gui1i0 - gui0i1 + gui1i0)*(guj0j1 - guj1j0 - guj0j1 + guj1j0) + x - y);
-		m->kk[bb]   += pre*((gui0i1 + gui1i0 + gui0i1 + gui1i0)*(guj0j1 + guj1j0 + guj0j1 + guj1j0) + x + y);
-		m->ksks[bb] += pre*((gui0i1 + gui1i0 - gui0i1 - gui1i0)*(guj0j1 + guj1j0 - guj0j1 - guj1j0) + x + y);
+		m->pair_bb[bb] += pre*(gui0j0*gui1j1 + gui1j0*gui0j1);
+		const double x = 2*((delta_i0j1 - guj1i0)*gui1j0 + (delta_i1j0 - guj0i1)*gui0j1);
+		const double y = 2*((delta_i0j0 - guj0i0)*gui1j1 + (delta_i1j1 - guj1i1)*gui0j0);
+		m->jj[bb]   += pre*(4*(gui0i1 - gui1i0)*(guj0j1 - guj1j0) + x - y);
+		m->jsjs[bb] += pre*(x - y);
+		m->kk[bb]   += pre*(4*(gui0i1 + gui1i0)*(guj0j1 + guj1j0) + x + y);
+		m->ksks[bb] += pre*(x + y);
 	}
 	}
 
@@ -324,15 +324,13 @@ void measure_uneqlt(const struct params *const restrict p, // const int sign,
 // 		const double gdj1i1 = Gd00[j1 + i1*N];
 // 		const double gdj1j0 = Gd00[j1 + j0*N];
 // 		const double gdj0j1 = Gd00[j0 + j1*N];
-		m->pair_b2b2[bb] += 0.5*pre*(gui0j0*gui1j1 + gui1j0*gui0j1 + gui0j1*gui1j0 + gui1j1*gui0j0);
-		const double x = ((delta_i0j1 - guj1i0)*gui1j0 + (delta_i1j0 - guj0i1)*gui0j1
-				+ (delta_i0j1 - guj1i0)*gui1j0 + (delta_i1j0 - guj0i1)*gui0j1);
-		const double y = ((delta_i0j0 - guj0i0)*gui1j1 + (delta_i1j1 - guj1i1)*gui0j0
-				+ (delta_i0j0 - guj0i0)*gui1j1 + (delta_i1j1 - guj1i1)*gui0j0);
-		m->j2j2[bb]   += pre*((gui0i1 - gui1i0 + gui0i1 - gui1i0)*(guj0j1 - guj1j0 + guj0j1 - guj1j0) + x - y);
-		m->js2js2[bb] += pre*((gui0i1 - gui1i0 - gui0i1 + gui1i0)*(guj0j1 - guj1j0 - guj0j1 + guj1j0) + x - y);
-		m->k2k2[bb]   += pre*((gui0i1 + gui1i0 + gui0i1 + gui1i0)*(guj0j1 + guj1j0 + guj0j1 + guj1j0) + x + y);
-		m->ks2ks2[bb] += pre*((gui0i1 + gui1i0 - gui0i1 - gui1i0)*(guj0j1 + guj1j0 - guj0j1 - guj1j0) + x + y);
+		m->pair_b2b2[bb] += pre*(gui0j0*gui1j1 + gui1j0*gui0j1);
+		const double x = 2*((delta_i0j1 - guj1i0)*gui1j0 + (delta_i1j0 - guj0i1)*gui0j1);
+		const double y = 2*((delta_i0j0 - guj0i0)*gui1j1 + (delta_i1j1 - guj1i1)*gui0j0);
+		m->j2j2[bb]   += pre*(4*(gui0i1 - gui1i0)*(guj0j1 - guj1j0) + x - y);
+		m->js2js2[bb] += pre*(x - y);
+		m->k2k2[bb]   += pre*(4*(gui0i1 + gui1i0)*(guj0j1 + guj1j0) + x + y);
+		m->ks2ks2[bb] += pre*(x + y);
 	}
 	}
 
@@ -454,13 +452,13 @@ void measure_uneqlt(const struct params *const restrict p, // const int sign,
 // 		const double gdj1j0 = Gd00[j1 + j0*N];
 // 		const double gdj0j1 = Gd00[j0 + j1*N];
 // 		const double gdj1j1 = Gd00[j1 + j1*N];
-		m->pair_bb[bb + num_bb*t] += 0.5*pre*(gui0j0*gui1j1 + gui1j0*gui0j1 + gui0j1*gui1j0 + gui1j1*gui0j0);
-		const double x = -guj1i0*gui1j0 - guj0i1*gui0j1 - guj1i0*gdi1j0 - guj0i1*gui0j1;
-		const double y = -guj0i0*gui1j1 - guj1i1*gui0j0 - guj0i0*gui1j1 - guj1i1*gui0j0;
-		m->jj[bb + num_bb*t]   += pre*((gui0i1 - gui1i0 + gui0i1 - gui1i0)*(guj0j1 - guj1j0 + guj0j1 - guj1j0) + x - y);
-		m->jsjs[bb + num_bb*t] += pre*((gui0i1 - gui1i0 - gui0i1 + gui1i0)*(guj0j1 - guj1j0 - guj0j1 + guj1j0) + x - y);
-		m->kk[bb + num_bb*t]   += pre*((gui0i1 + gui1i0 + gui0i1 + gui1i0)*(guj0j1 + guj1j0 + guj0j1 + guj1j0) + x + y);
-		m->ksks[bb + num_bb*t] += pre*((gui0i1 + gui1i0 - gui0i1 - gui1i0)*(guj0j1 + guj1j0 - guj0j1 - guj1j0) + x + y);
+		m->pair_bb[bb + num_bb*t] += pre*(gui0j0*gui1j1 + gui1j0*gui0j1);
+		const double x = 2*(-guj1i0*gui1j0 - guj0i1*gui0j1);
+		const double y = 2*(-guj0i0*gui1j1 - guj1i1*gui0j0);
+		m->jj[bb + num_bb*t]   += pre*(4*(gui0i1 - gui1i0)*(guj0j1 - guj1j0) + x - y);
+		m->jsjs[bb + num_bb*t] += pre*(x - y);
+		m->kk[bb + num_bb*t]   += pre*(4*(gui0i1 + gui1i0)*(guj0j1 + guj1j0) + x + y);
+		m->ksks[bb + num_bb*t] += pre*(x + y);
 	}
 	}
 	}
@@ -515,13 +513,13 @@ void measure_uneqlt(const struct params *const restrict p, // const int sign,
 // 		const double gdj1j0 = Gd00[j1 + j0*N];
 // 		const double gdj0j1 = Gd00[j0 + j1*N];
 // 		const double gdj1j1 = Gd00[j1 + j1*N];
-		m->pair_b2b2[bb + num_bb*t] += 0.5*pre*(gui0j0*gui1j1 + gui1j0*gui0j1 + gui0j1*gui1j0 + gui1j1*gui0j0);
-		const double x = -guj1i0*gui1j0 - guj0i1*gui0j1 - guj1i0*gui1j0 - guj0i1*gui0j1;
-		const double y = -guj0i0*gui1j1 - guj1i1*gui0j0 - guj0i0*gdi1j1 - guj1i1*gui0j0;
-		m->j2j2[bb + num_b2b2*t]   += pre*((gui0i1 - gui1i0 + gui0i1 - gui1i0)*(guj0j1 - guj1j0 + guj0j1 - guj1j0) + x - y);
-		m->js2js2[bb + num_b2b2*t] += pre*((gui0i1 - gui1i0 - gui0i1 + gui1i0)*(guj0j1 - guj1j0 - guj0j1 + guj1j0) + x - y);
-		m->k2k2[bb + num_b2b2*t]   += pre*((gui0i1 + gui1i0 + gui0i1 + gui1i0)*(guj0j1 + guj1j0 + guj0j1 + guj1j0) + x + y);
-		m->ks2ks2[bb + num_b2b2*t] += pre*((gui0i1 + gui1i0 - gui0i1 - gui1i0)*(guj0j1 + guj1j0 - guj0j1 - guj1j0) + x + y);
+		m->pair_b2b2[bb + num_bb*t] += pre*(gui0j0*gui1j1 + gui1j0*gui0j1);
+		const double x = 2*(-guj1i0*gui1j0 - guj0i1*gui0j1);
+		const double y = 2*(-guj0i0*gui1j1 - guj1i1*gui0j0);
+		m->j2j2[bb + num_b2b2*t]   += pre*(4*(gui0i1 - gui1i0)*(guj0j1 - guj1j0) + x - y);
+		m->js2js2[bb + num_b2b2*t] += pre*(x - y);
+		m->k2k2[bb + num_b2b2*t]   += pre*(4*(gui0i1 + gui1i0)*(guj0j1 + guj1j0) + x + y);
+		m->ks2ks2[bb + num_b2b2*t] += pre*(x + y);
 	}
 	}
 	}
