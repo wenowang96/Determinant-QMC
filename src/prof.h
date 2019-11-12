@@ -28,7 +28,7 @@ enum {
 
 extern tick_t profile_time[n_profile];
 extern int profile_count[n_profile];
-#pragma omp threadprivate(profile_time, profile_count)
+// #pragma omp threadprivate(profile_time, profile_count)
 
 #define profile_begin(a) \
 	const tick_t __##a##_start = time_wall()
