@@ -19,7 +19,7 @@ void measure_eqlt(const struct params *const restrict p, // const int sign,
 	for (int i = 0; i < N; i++) {
 		const int r = p->map_i[i];
 		const double pre = 1.0 / p->degen_i[r];
-		const double guii = gu[i + i*N],
+		const double guii = gu[i + i*N];
 		m->density[r] += pre*2*(1. - guii);
 		m->double_occ[r] += pre*(1. - guii)*(1. - guii);
 	}
@@ -30,10 +30,10 @@ void measure_eqlt(const struct params *const restrict p, // const int sign,
 		const int delta = (i == j);
 		const int r = p->map_ij[i + j*N];
 		const double pre = 1.0 / p->degen_ij[r];
-		const double guii = gu[i + i*N],
-		const double guij = gu[i + j*N], 
-		const double guji = gu[j + i*N], 
-		const double gujj = gu[j + j*N], 
+		const double guii = gu[i + i*N];
+		const double guij = gu[i + j*N]; 
+		const double guji = gu[j + i*N]; 
+		const double gujj = gu[j + j*N]; 
 		m->g00[r] += pre*guij;
 		const double x = 2*(delta*guii - guji*guij);
 		m->nn[r] += pre*(4*(1. - guii)*(1. - gujj) + x);
@@ -74,7 +74,7 @@ void measure_eqlt(const struct params *const restrict p, // const int sign,
 // 		const double gdi0i1 = gd[i0 + N*i1];
 // 		const double gdi1i0 = gd[i1 + N*i0];
 		const double gujj = gu[j + N*j];
-		const double gdjj = gd[j + N*j];
+		// const double gdjj = gd[j + N*j];
 
 		const double ku = 2.*delta_i0i1 - gui0i1 - gui1i0;
 // 		const double kd = 2.*delta_i0i1 - gdi0i1 - gdi1i0;
@@ -83,7 +83,7 @@ void measure_eqlt(const struct params *const restrict p, // const int sign,
                 const double yu = (1. - gujj);
                 const double zu = ku*yu + xu;
 		m->kv[bs] += 2*pre*zu*yu;
-		m->kn[bs] += 2*pre*zu;
+		m->kn[bs] += pre*(4*zu-2*xu);
 	}
 
 	// 2 bond measurements
@@ -198,9 +198,9 @@ void measure_uneqlt(const struct params *const restrict p, // const int sign,
 		const double *const restrict Gu0t_t = Gu0t + N*N*t;
 		const double *const restrict Gutt_t = Gutt + N*N*t;
 		const double *const restrict Gut0_t = Gut0 + N*N*t;
-		const double *const restrict Gd0t_t = Gd0t + N*N*t;
-		const double *const restrict Gdtt_t = Gdtt + N*N*t;
-		const double *const restrict Gdt0_t = Gdt0 + N*N*t;
+		//const double *const restrict Gd0t_t = Gd0t + N*N*t;
+		//const double *const restrict Gdtt_t = Gdtt + N*N*t;
+		//const double *const restrict Gdt0_t = Gdt0 + N*N*t;
 	for (int j = 0; j < N; j++)
 	for (int b = 0; b < num_b; b++) {
 		const int i0 = p->bonds[b];
@@ -232,7 +232,7 @@ void measure_uneqlt(const struct params *const restrict p, // const int sign,
                 const double yu = (1. - gujj);
                 const double zu = ku*yu + xu;
 		m->kv[bs + num_bs*t] += 2*pre*zu*yu;
-		m->kn[bs + num_bs*t] += 2*pre*zu;
+		m->kn[bs + num_bs*t] += pre*(4*zu-2*xu);
 	}
 	}
 
@@ -409,9 +409,9 @@ void measure_uneqlt(const struct params *const restrict p, // const int sign,
 		const double *const restrict Gu0t_t = Gu0t + N*N*t;
 		const double *const restrict Gutt_t = Gutt + N*N*t;
 		const double *const restrict Gut0_t = Gut0 + N*N*t;
-		const double *const restrict Gd0t_t = Gd0t + N*N*t;
-		const double *const restrict Gdtt_t = Gdtt + N*N*t;
-		const double *const restrict Gdt0_t = Gdt0 + N*N*t;
+		//const double *const restrict Gd0t_t = Gd0t + N*N*t;
+		//const double *const restrict Gdtt_t = Gdtt + N*N*t;
+		//const double *const restrict Gdt0_t = Gdt0 + N*N*t;
 	for (int c = 0; c < num_b; c++) {
 		const int j0 = p->bonds[c];
 		const int j1 = p->bonds[c + num_b];
@@ -465,14 +465,14 @@ void measure_uneqlt(const struct params *const restrict p, // const int sign,
 
     // no delta functions here.
 	if (meas_2bond_corr)
-	#pragma omp parallel for
+	// #pragma omp parallel for
 	for (int t = 1; t < L; t++) {
 		const double *const restrict Gu0t_t = Gu0t + N*N*t;
 		const double *const restrict Gutt_t = Gutt + N*N*t;
 		const double *const restrict Gut0_t = Gut0 + N*N*t;
-		const double *const restrict Gd0t_t = Gd0t + N*N*t;
-		const double *const restrict Gdtt_t = Gdtt + N*N*t;
-		const double *const restrict Gdt0_t = Gdt0 + N*N*t;
+		//const double *const restrict Gd0t_t = Gd0t + N*N*t;
+		//const double *const restrict Gdtt_t = Gdtt + N*N*t;
+		//const double *const restrict Gdt0_t = Gdt0 + N*N*t;
 	for (int c = 0; c < num_b2; c++) {
 		const int j0 = p->bond2s[c];
 		const int j1 = p->bond2s[c + num_b2];
@@ -526,14 +526,14 @@ void measure_uneqlt(const struct params *const restrict p, // const int sign,
 
 
 	if (meas_nematic_corr)
-	#pragma omp parallel for
+	//#pragma omp parallel for
 	for (int t = 1; t < L; t++) {
 		const double *const restrict Gu0t_t = Gu0t + N*N*t;
 		const double *const restrict Gutt_t = Gutt + N*N*t;
 		const double *const restrict Gut0_t = Gut0 + N*N*t;
-		const double *const restrict Gd0t_t = Gd0t + N*N*t;
-		const double *const restrict Gdtt_t = Gdtt + N*N*t;
-		const double *const restrict Gdt0_t = Gdt0 + N*N*t;
+		//const double *const restrict Gd0t_t = Gd0t + N*N*t;
+		//const double *const restrict Gdtt_t = Gdtt + N*N*t;
+		//const double *const restrict Gdt0_t = Gdt0 + N*N*t;
 	for (int c = 0; c < NEM_BONDS*N; c++) {
 		const int j0 = p->bonds[c];
 		const int j1 = p->bonds[c + num_b];
@@ -615,7 +615,7 @@ void measure_uneqlt_full(const struct params *const restrict p, const int sign,
 	const int num_b = p->num_b, num_bb = p->num_bb;
 
 	// 2-site measurements
-	#pragma omp parallel for
+	//#pragma omp parallel for
 	for (int t = 0; t < L; t++)
 	for (int l = 0; l < L; l++) {
 		const int k = (l + t) % L;
@@ -644,7 +644,7 @@ void measure_uneqlt_full(const struct params *const restrict p, const int sign,
 	}
 
 	// 2-bond measurements
-	#pragma omp parallel for
+	//#pragma omp parallel for
 	for (int t = 0; t < L; t++)
 	for (int l = 0; l < L; l++) {
 		const int k = (l + t) % L;

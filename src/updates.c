@@ -50,7 +50,7 @@ void update_delayed(const int N, const int n_delay, const double *const restrict
 // 			}
 			k++;
 			hs[i] = !hs[i];
-			if (prob < 0) *sign *= -1;
+			// if (prob < 0) *sign *= -1;
 		}
 		if (k == n_delay) {
 			k = 0;

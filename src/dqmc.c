@@ -323,15 +323,15 @@ static int dqmc(struct sim_data *sim)
 			if ((sim->s.sweep >= sim->p.n_sweep_warm) &&
 					(sim->p.period_eqlt > 0) &&
 					(l + 1) % sim->p.period_eqlt == 0) {
-				#pragma omp parallel sections
-				{
-				#pragma omp section
-				{
+				// #pragma omp parallel sections
+				// {
+				// #pragma omp section
+				// {
 				profile_begin(half_wrap);
 				matmul(tmpNN1u, gu, exp_halfK);
 				matmul(tmpNN2u, inv_exp_halfK, tmpNN1u);
 				profile_end(half_wrap);
-				}
+				// }
 // 				#pragma omp section
 // 				{
 // 				profile_begin(half_wrap);
@@ -339,7 +339,7 @@ static int dqmc(struct sim_data *sim)
 // 				matmul(tmpNN2d, inv_exp_halfK, tmpNN1d);
 // 				profile_end(half_wrap);
 // 				}
-				}
+				//}
 
 				profile_begin(meas_eq);
 				measure_eqlt(&sim->p, tmpNN2u, &sim->m_eq);
@@ -443,7 +443,7 @@ static int dqmc(struct sim_data *sim)
 // 		my_free(Qd);
 // 		my_free(taud);
 // 		my_free(Gredd);
-		my_free(ueGd);
+//		my_free(ueGd);
 // 		my_free(Gdt0);
 // 		my_free(Gdtt);
 // 		my_free(Gd0t);
