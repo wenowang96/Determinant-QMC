@@ -143,9 +143,10 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 	m->n_sample++;
 	m->sign += sign;
 	const int N = p->N, L = p->L, num_i = p->num_i, num_ij = p->num_ij;
-	const int num_b = p->num_b, num_bs = p->num_bs, num_bb = p->num_bb;
+	const int num_b = p->num_b, num_bs = p->num_bs, num_bb = p->num_bb, num_bbb = p->num_bbb;
         const int num_b2 = p->num_b2, num_b2b2 = p->num_b2b2;
 	const int meas_bond_corr = p->meas_bond_corr;
+        const int meas_3curr = p->meas_3curr;
 	const int meas_2bond_corr = p->meas_2bond_corr;
 	const int meas_energy_corr = p->meas_energy_corr;
 	const int meas_nematic_corr = p->meas_nematic_corr;
@@ -301,20 +302,20 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const int k0 = p->bonds[b2];
 		const int k1 = p->bonds[b2 + num_b];
                 
-		const int bbb = p->map_bb[(b2 + b1*num_b + c*num_b*num_b];
+		const int bbb = p->map_bb[b2 + b1*num_b + c*num_b*num_b];
 		const double pre = (double)sign / p->degen_bbb[bbb];
 		const int delta_i0j0 = (i0 == j0);
 		const int delta_i1j0 = (i1 == j0);
 		const int delta_i0j1 = (i0 == j1);
 		const int delta_i1j1 = (i1 == j1);
-                const int delta_k0j0 = (k0 == j0);
-		const int delta_k1j0 = (k1 == j0);
-		const int delta_k0j1 = (k0 == j1);
-		const int delta_k1j1 = (k1 == j1);
-                const int delta_k0i0 = (k0 == i0);
-		const int delta_k1i0 = (k1 == i0);
-		const int delta_k0i1 = (k0 == i1);
-		const int delta_k1i1 = (k1 == i1);
+                const int delta_j0k0 = (k0 == j0);
+		const int delta_j0k1 = (k1 == j0);
+		const int delta_j1k0 = (k0 == j1);
+		const int delta_j1k1 = (k1 == j1);
+                const int delta_i0k0 = (k0 == i0);
+		const int delta_i0k1 = (k1 == i0);
+		const int delta_i1k0 = (k0 == i1);
+		const int delta_i1k1 = (k1 == i1);
                                            
 		const double gui1i0 = Gu00[i1 + i0*N];
 		const double gui0i1 = Gu00[i0 + i1*N];
@@ -351,8 +352,6 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const double guj1k0 = Gu00[j1 + k0*N];
 		const double guj0k1 = Gu00[j0 + k1*N];
 		const double guj1k1 = Gu00[j1 + k1*N];
-		const double guj1j0 = Gu00[j1 + j0*N];
-		const double guj0j1 = Gu00[j0 + j1*N];
 		const double gdk1k0 = Gd00[k1 + k0*N];
 		const double gdk0k1 = Gd00[k0 + k1*N];
 		const double gdk0j0 = Gd00[k0 + j0*N];
@@ -363,11 +362,7 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const double gdj1k0 = Gd00[j1 + k0*N];
 		const double gdj0k1 = Gd00[j0 + k1*N];
 		const double gdj1k1 = Gd00[j1 + k1*N];
-		const double gdj1j0 = Gd00[j1 + j0*N];
-		const double gdj0j1 = Gd00[j0 + j1*N];
                                            
-                const double guk1k0 = Gu00[k1 + k0*N];
-		const double guk0k1 = Gu00[k0 + k1*N];
 		const double guk0i0 = Gu00[k0 + i0*N];
 		const double guk1i0 = Gu00[k1 + i0*N];
 		const double guk0i1 = Gu00[k0 + i1*N];
@@ -376,10 +371,6 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const double gui1k0 = Gu00[i1 + k0*N];
 		const double gui0k1 = Gu00[i0 + k1*N];
 		const double gui1k1 = Gu00[i1 + k1*N];
-		const double gui1i0 = Gu00[i1 + i0*N];
-		const double gui0i1 = Gu00[i0 + i1*N];
-		const double gdk1k0 = Gd00[k1 + k0*N];
-		const double gdk0k1 = Gd00[k0 + k1*N];
 		const double gdk0i0 = Gd00[k0 + i0*N];
 		const double gdk1i0 = Gd00[k1 + i0*N];
 		const double gdk0i1 = Gd00[k0 + i1*N];
@@ -388,8 +379,6 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const double gdi1k0 = Gd00[i1 + k0*N];
 		const double gdi0k1 = Gd00[i0 + k1*N];
 		const double gdi1k1 = Gd00[i1 + k1*N];
-		const double gdi1i0 = Gd00[i1 + i0*N];
-		const double gdi0i1 = Gd00[i0 + i1*N];                           
                                            
 		m->jjj[bbb] += +1*(+(delta_i1k0-gui1k0)*guk1i0*(-guj1j0)-(delta_i1k0-gui1k0)*guk1j0*(delta_i0j1-guj1i0)+(delta_j1k0-guj1k0)*guk1i0*gui1j0+(delta_j1k0-guj1k0)*guk1j0*(-gui1i0)+(-guk1k0)*(-gui1i0)*(-guj1j0)+(-guk1k0)*(delta_i0j1-guj1i0)*gui1j0)
 +1*(+(delta_i1k0-gui1k0)*guk1i0*(-gdj1j0)+(-guk1k0)*(-gui1i0)*(-gdj1j0))
@@ -677,7 +666,7 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const int k0 = p->bonds[b2];
 		const int k1 = p->bonds[b2 + num_b];
                 
-		const int bbb = p->map_bb[(b2 + b1*num_b + c*num_b*num_b];
+		const int bbb = p->map_bb[b2 + b1*num_b + c*num_b*num_b];
 		const double pre = (double)sign / p->degen_bbb[bbb];
 		const int delta_i0k0 = (i0 == k0)*delta_dt;
 		const int delta_i1k0 = (i1 == k0)*delta_dt;
