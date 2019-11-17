@@ -57,7 +57,7 @@ def create_1(filename=None, overwrite=False, seed=None,
              Nx=16, Ny=4, mu=0.0, tp=0.0, U=6.0, dt=0.115, L=40,
              n_delay=16, n_matmul=8, n_sweep_warm=200, n_sweep_meas=2000,
              period_eqlt=8, period_uneqlt=0,
-             meas_bond_corr=1, meas_2bond_corr=0, meas_energy_corr=0, meas_nematic_corr=0):
+             meas_bond_corr=0, meas_3curr=0,  meas_2bond_corr=0, meas_energy_corr=0, meas_nematic_corr=0):
     assert L % n_matmul == 0 and L % period_eqlt == 0
     N = Nx * Ny
 
