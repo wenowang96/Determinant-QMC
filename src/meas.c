@@ -288,6 +288,176 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		m->ksks[bb] += pre*((gui0i1 + gui1i0 - gdi0i1 - gdi1i0)*(guj0j1 + guj1j0 - gdj0j1 - gdj1j0) + x + y);
 	}
 	}
+	
+	// 3 bond measurements
+	if (meas_3curr)
+	for (int c = 0; c < num_b; c++) {
+		const int j0 = p->bonds[c];
+		const int j1 = p->bonds[c + num_b];
+	for (int b1 = 0; b1 < num_b; b1++) {
+		const int i0 = p->bonds[b1];
+		const int i1 = p->bonds[b1 + num_b];
+        for (int b2 = 0; b2 < num_b; b2++) {
+		const int k0 = p->bonds[b2];
+		const int k1 = p->bonds[b2 + num_b];
+                
+		const int bbb = p->map_bb[(b2 + b1*num_b + c*num_b*num_b];
+		const double pre = (double)sign / p->degen_bbb[bbb];
+		const int delta_i0j0 = (i0 == j0);
+		const int delta_i1j0 = (i1 == j0);
+		const int delta_i0j1 = (i0 == j1);
+		const int delta_i1j1 = (i1 == j1);
+                const int delta_k0j0 = (k0 == j0);
+		const int delta_k1j0 = (k1 == j0);
+		const int delta_k0j1 = (k0 == j1);
+		const int delta_k1j1 = (k1 == j1);
+                const int delta_k0i0 = (k0 == i0);
+		const int delta_k1i0 = (k1 == i0);
+		const int delta_k0i1 = (k0 == i1);
+		const int delta_k1i1 = (k1 == i1);
+                                           
+		const double gui1i0 = Gu00[i1 + i0*N];
+		const double gui0i1 = Gu00[i0 + i1*N];
+		const double gui0j0 = Gu00[i0 + j0*N];
+		const double gui1j0 = Gu00[i1 + j0*N];
+		const double gui0j1 = Gu00[i0 + j1*N];
+		const double gui1j1 = Gu00[i1 + j1*N];
+		const double guj0i0 = Gu00[j0 + i0*N];
+		const double guj1i0 = Gu00[j1 + i0*N];
+		const double guj0i1 = Gu00[j0 + i1*N];
+		const double guj1i1 = Gu00[j1 + i1*N];
+		const double guj1j0 = Gu00[j1 + j0*N];
+		const double guj0j1 = Gu00[j0 + j1*N];
+		const double gdi1i0 = Gd00[i1 + i0*N];
+		const double gdi0i1 = Gd00[i0 + i1*N];
+		const double gdi0j0 = Gd00[i0 + j0*N];
+		const double gdi1j0 = Gd00[i1 + j0*N];
+		const double gdi0j1 = Gd00[i0 + j1*N];
+		const double gdi1j1 = Gd00[i1 + j1*N];
+		const double gdj0i0 = Gd00[j0 + i0*N];
+		const double gdj1i0 = Gd00[j1 + i0*N];
+		const double gdj0i1 = Gd00[j0 + i1*N];
+		const double gdj1i1 = Gd00[j1 + i1*N];
+		const double gdj1j0 = Gd00[j1 + j0*N];
+		const double gdj0j1 = Gd00[j0 + j1*N];
+                                           
+                const double guk1k0 = Gu00[k1 + k0*N];
+		const double guk0k1 = Gu00[k0 + k1*N];
+		const double guk0j0 = Gu00[k0 + j0*N];
+		const double guk1j0 = Gu00[k1 + j0*N];
+		const double guk0j1 = Gu00[k0 + j1*N];
+		const double guk1j1 = Gu00[k1 + j1*N];
+		const double guj0k0 = Gu00[j0 + k0*N];
+		const double guj1k0 = Gu00[j1 + k0*N];
+		const double guj0k1 = Gu00[j0 + k1*N];
+		const double guj1k1 = Gu00[j1 + k1*N];
+		const double guj1j0 = Gu00[j1 + j0*N];
+		const double guj0j1 = Gu00[j0 + j1*N];
+		const double gdk1k0 = Gd00[k1 + k0*N];
+		const double gdk0k1 = Gd00[k0 + k1*N];
+		const double gdk0j0 = Gd00[k0 + j0*N];
+		const double gdk1j0 = Gd00[k1 + j0*N];
+		const double gdk0j1 = Gd00[k0 + j1*N];
+		const double gdk1j1 = Gd00[k1 + j1*N];
+		const double gdj0k0 = Gd00[j0 + k0*N];
+		const double gdj1k0 = Gd00[j1 + k0*N];
+		const double gdj0k1 = Gd00[j0 + k1*N];
+		const double gdj1k1 = Gd00[j1 + k1*N];
+		const double gdj1j0 = Gd00[j1 + j0*N];
+		const double gdj0j1 = Gd00[j0 + j1*N];
+                                           
+                const double guk1k0 = Gu00[k1 + k0*N];
+		const double guk0k1 = Gu00[k0 + k1*N];
+		const double guk0i0 = Gu00[k0 + i0*N];
+		const double guk1i0 = Gu00[k1 + i0*N];
+		const double guk0i1 = Gu00[k0 + i1*N];
+		const double guk1i1 = Gu00[k1 + i1*N];
+		const double gui0k0 = Gu00[i0 + k0*N];
+		const double gui1k0 = Gu00[i1 + k0*N];
+		const double gui0k1 = Gu00[i0 + k1*N];
+		const double gui1k1 = Gu00[i1 + k1*N];
+		const double gui1i0 = Gu00[i1 + i0*N];
+		const double gui0i1 = Gu00[i0 + i1*N];
+		const double gdk1k0 = Gd00[k1 + k0*N];
+		const double gdk0k1 = Gd00[k0 + k1*N];
+		const double gdk0i0 = Gd00[k0 + i0*N];
+		const double gdk1i0 = Gd00[k1 + i0*N];
+		const double gdk0i1 = Gd00[k0 + i1*N];
+		const double gdk1i1 = Gd00[k1 + i1*N];
+		const double gdi0k0 = Gd00[i0 + k0*N];
+		const double gdi1k0 = Gd00[i1 + k0*N];
+		const double gdi0k1 = Gd00[i0 + k1*N];
+		const double gdi1k1 = Gd00[i1 + k1*N];
+		const double gdi1i0 = Gd00[i1 + i0*N];
+		const double gdi0i1 = Gd00[i0 + i1*N];                           
+                                           
+		m->jjj[bbb] += +1*(+(delta_i1k0-gui1k0)*guk1i0*(-guj1j0)-(delta_i1k0-gui1k0)*guk1j0*(delta_i0j1-guj1i0)+(delta_j1k0-guj1k0)*guk1i0*gui1j0+(delta_j1k0-guj1k0)*guk1j0*(-gui1i0)+(-guk1k0)*(-gui1i0)*(-guj1j0)+(-guk1k0)*(delta_i0j1-guj1i0)*gui1j0)
++1*(+(delta_i1k0-gui1k0)*guk1i0*(-gdj1j0)+(-guk1k0)*(-gui1i0)*(-gdj1j0))
+-1*(+(delta_i1k0-gui1k0)*guk1i0*(-guj0j1)-(delta_i1k0-gui1k0)*guk1j1*(delta_i0j0-guj0i0)+(delta_j0k0-guj0k0)*guk1i0*gui1j1+(delta_j0k0-guj0k0)*guk1j1*(-gui1i0)+(-guk1k0)*(-gui1i0)*(-guj0j1)+(-guk1k0)*(delta_i0j0-guj0i0)*gui1j1)
+-1*(+(delta_i1k0-gui1k0)*guk1i0*(-gdj0j1)+(-guk1k0)*(-gui1i0)*(-gdj0j1))
++1*(+(delta_j1k0-guj1k0)*guk1j0*(-gdi1i0)+(-guk1k0)*(-gdi1i0)*(-guj1j0))
++1*(+(-guk1k0)*(-gdi1i0)*(-gdj1j0)+(-guk1k0)*(delta_i0j1-gdj1i0)*gdi1j0)
+-1*(+(delta_j0k0-guj0k0)*guk1j1*(-gdi1i0)+(-guk1k0)*(-gdi1i0)*(-guj0j1))
+-1*(+(-guk1k0)*(-gdi1i0)*(-gdj0j1)+(-guk1k0)*(delta_i0j0-gdj0i0)*gdi1j1)
+-1*(+(delta_i0k0-gui0k0)*guk1i1*(-guj1j0)-(delta_i0k0-gui0k0)*guk1j0*(delta_i1j1-guj1i1)+(delta_j1k0-guj1k0)*guk1i1*gui0j0+(delta_j1k0-guj1k0)*guk1j0*(-gui0i1)+(-guk1k0)*(-gui0i1)*(-guj1j0)+(-guk1k0)*(delta_i1j1-guj1i1)*gui0j0)
+-1*(+(delta_i0k0-gui0k0)*guk1i1*(-gdj1j0)+(-guk1k0)*(-gui0i1)*(-gdj1j0))
++1*(+(delta_i0k0-gui0k0)*guk1i1*(-guj0j1)-(delta_i0k0-gui0k0)*guk1j1*(delta_i1j0-guj0i1)+(delta_j0k0-guj0k0)*guk1i1*gui0j1+(delta_j0k0-guj0k0)*guk1j1*(-gui0i1)+(-guk1k0)*(-gui0i1)*(-guj0j1)+(-guk1k0)*(delta_i1j0-guj0i1)*gui0j1)
++1*(+(delta_i0k0-gui0k0)*guk1i1*(-gdj0j1)+(-guk1k0)*(-gui0i1)*(-gdj0j1))
+-1*(+(delta_j1k0-guj1k0)*guk1j0*(-gdi0i1)+(-guk1k0)*(-gdi0i1)*(-guj1j0))
+-1*(+(-guk1k0)*(-gdi0i1)*(-gdj1j0)+(-guk1k0)*(delta_i1j1-gdj1i1)*gdi0j0)
++1*(+(delta_j0k0-guj0k0)*guk1j1*(-gdi0i1)+(-guk1k0)*(-gdi0i1)*(-guj0j1))
++1*(+(-guk1k0)*(-gdi0i1)*(-gdj0j1)+(-guk1k0)*(delta_i1j0-gdj0i1)*gdi0j1)
++1*(+(-gdk1k0)*(-gui1i0)*(-guj1j0)+(-gdk1k0)*(delta_i0j1-guj1i0)*gui1j0)
++1*(+(delta_j1k0-gdj1k0)*gdk1j0*(-gui1i0)+(-gdk1k0)*(-gui1i0)*(-gdj1j0))
+-1*(+(-gdk1k0)*(-gui1i0)*(-guj0j1)+(-gdk1k0)*(delta_i0j0-guj0i0)*gui1j1)
+-1*(+(delta_j0k0-gdj0k0)*gdk1j1*(-gui1i0)+(-gdk1k0)*(-gui1i0)*(-gdj0j1))
++1*(+(delta_i1k0-gdi1k0)*gdk1i0*(-guj1j0)+(-gdk1k0)*(-gdi1i0)*(-guj1j0))
++1*(+(delta_i1k0-gdi1k0)*gdk1i0*(-gdj1j0)-(delta_i1k0-gdi1k0)*gdk1j0*(delta_i0j1-gdj1i0)+(delta_j1k0-gdj1k0)*gdk1i0*gdi1j0+(delta_j1k0-gdj1k0)*gdk1j0*(-gdi1i0)+(-gdk1k0)*(-gdi1i0)*(-gdj1j0)+(-gdk1k0)*(delta_i0j1-gdj1i0)*gdi1j0)
+-1*(+(delta_i1k0-gdi1k0)*gdk1i0*(-guj0j1)+(-gdk1k0)*(-gdi1i0)*(-guj0j1))
+-1*(+(delta_i1k0-gdi1k0)*gdk1i0*(-gdj0j1)-(delta_i1k0-gdi1k0)*gdk1j1*(delta_i0j0-gdj0i0)+(delta_j0k0-gdj0k0)*gdk1i0*gdi1j1+(delta_j0k0-gdj0k0)*gdk1j1*(-gdi1i0)+(-gdk1k0)*(-gdi1i0)*(-gdj0j1)+(-gdk1k0)*(delta_i0j0-gdj0i0)*gdi1j1)
+-1*(+(-gdk1k0)*(-gui0i1)*(-guj1j0)+(-gdk1k0)*(delta_i1j1-guj1i1)*gui0j0)
+-1*(+(delta_j1k0-gdj1k0)*gdk1j0*(-gui0i1)+(-gdk1k0)*(-gui0i1)*(-gdj1j0))
++1*(+(-gdk1k0)*(-gui0i1)*(-guj0j1)+(-gdk1k0)*(delta_i1j0-guj0i1)*gui0j1)
++1*(+(delta_j0k0-gdj0k0)*gdk1j1*(-gui0i1)+(-gdk1k0)*(-gui0i1)*(-gdj0j1))
+-1*(+(delta_i0k0-gdi0k0)*gdk1i1*(-guj1j0)+(-gdk1k0)*(-gdi0i1)*(-guj1j0))
+-1*(+(delta_i0k0-gdi0k0)*gdk1i1*(-gdj1j0)-(delta_i0k0-gdi0k0)*gdk1j0*(delta_i1j1-gdj1i1)+(delta_j1k0-gdj1k0)*gdk1i1*gdi0j0+(delta_j1k0-gdj1k0)*gdk1j0*(-gdi0i1)+(-gdk1k0)*(-gdi0i1)*(-gdj1j0)+(-gdk1k0)*(delta_i1j1-gdj1i1)*gdi0j0)
++1*(+(delta_i0k0-gdi0k0)*gdk1i1*(-guj0j1)+(-gdk1k0)*(-gdi0i1)*(-guj0j1))
++1*(+(delta_i0k0-gdi0k0)*gdk1i1*(-gdj0j1)-(delta_i0k0-gdi0k0)*gdk1j1*(delta_i1j0-gdj0i1)+(delta_j0k0-gdj0k0)*gdk1i1*gdi0j1+(delta_j0k0-gdj0k0)*gdk1j1*(-gdi0i1)+(-gdk1k0)*(-gdi0i1)*(-gdj0j1)+(-gdk1k0)*(delta_i1j0-gdj0i1)*gdi0j1)
+-1*(+(delta_i1k1-gui1k1)*guk0i0*(-guj1j0)-(delta_i1k1-gui1k1)*guk0j0*(delta_i0j1-guj1i0)+(delta_j1k1-guj1k1)*guk0i0*gui1j0+(delta_j1k1-guj1k1)*guk0j0*(-gui1i0)+(-guk0k1)*(-gui1i0)*(-guj1j0)+(-guk0k1)*(delta_i0j1-guj1i0)*gui1j0)
+-1*(+(delta_i1k1-gui1k1)*guk0i0*(-gdj1j0)+(-guk0k1)*(-gui1i0)*(-gdj1j0))
++1*(+(delta_i1k1-gui1k1)*guk0i0*(-guj0j1)-(delta_i1k1-gui1k1)*guk0j1*(delta_i0j0-guj0i0)+(delta_j0k1-guj0k1)*guk0i0*gui1j1+(delta_j0k1-guj0k1)*guk0j1*(-gui1i0)+(-guk0k1)*(-gui1i0)*(-guj0j1)+(-guk0k1)*(delta_i0j0-guj0i0)*gui1j1)
++1*(+(delta_i1k1-gui1k1)*guk0i0*(-gdj0j1)+(-guk0k1)*(-gui1i0)*(-gdj0j1))
+-1*(+(delta_j1k1-guj1k1)*guk0j0*(-gdi1i0)+(-guk0k1)*(-gdi1i0)*(-guj1j0))
+-1*(+(-guk0k1)*(-gdi1i0)*(-gdj1j0)+(-guk0k1)*(delta_i0j1-gdj1i0)*gdi1j0)
++1*(+(delta_j0k1-guj0k1)*guk0j1*(-gdi1i0)+(-guk0k1)*(-gdi1i0)*(-guj0j1))
++1*(+(-guk0k1)*(-gdi1i0)*(-gdj0j1)+(-guk0k1)*(delta_i0j0-gdj0i0)*gdi1j1)
++1*(+(delta_i0k1-gui0k1)*guk0i1*(-guj1j0)-(delta_i0k1-gui0k1)*guk0j0*(delta_i1j1-guj1i1)+(delta_j1k1-guj1k1)*guk0i1*gui0j0+(delta_j1k1-guj1k1)*guk0j0*(-gui0i1)+(-guk0k1)*(-gui0i1)*(-guj1j0)+(-guk0k1)*(delta_i1j1-guj1i1)*gui0j0)
++1*(+(delta_i0k1-gui0k1)*guk0i1*(-gdj1j0)+(-guk0k1)*(-gui0i1)*(-gdj1j0))
+-1*(+(delta_i0k1-gui0k1)*guk0i1*(-guj0j1)-(delta_i0k1-gui0k1)*guk0j1*(delta_i1j0-guj0i1)+(delta_j0k1-guj0k1)*guk0i1*gui0j1+(delta_j0k1-guj0k1)*guk0j1*(-gui0i1)+(-guk0k1)*(-gui0i1)*(-guj0j1)+(-guk0k1)*(delta_i1j0-guj0i1)*gui0j1)
+-1*(+(delta_i0k1-gui0k1)*guk0i1*(-gdj0j1)+(-guk0k1)*(-gui0i1)*(-gdj0j1))
++1*(+(delta_j1k1-guj1k1)*guk0j0*(-gdi0i1)+(-guk0k1)*(-gdi0i1)*(-guj1j0))
++1*(+(-guk0k1)*(-gdi0i1)*(-gdj1j0)+(-guk0k1)*(delta_i1j1-gdj1i1)*gdi0j0)
+-1*(+(delta_j0k1-guj0k1)*guk0j1*(-gdi0i1)+(-guk0k1)*(-gdi0i1)*(-guj0j1))
+-1*(+(-guk0k1)*(-gdi0i1)*(-gdj0j1)+(-guk0k1)*(delta_i1j0-gdj0i1)*gdi0j1)
+-1*(+(-gdk0k1)*(-gui1i0)*(-guj1j0)+(-gdk0k1)*(delta_i0j1-guj1i0)*gui1j0)
+-1*(+(delta_j1k1-gdj1k1)*gdk0j0*(-gui1i0)+(-gdk0k1)*(-gui1i0)*(-gdj1j0))
++1*(+(-gdk0k1)*(-gui1i0)*(-guj0j1)+(-gdk0k1)*(delta_i0j0-guj0i0)*gui1j1)
++1*(+(delta_j0k1-gdj0k1)*gdk0j1*(-gui1i0)+(-gdk0k1)*(-gui1i0)*(-gdj0j1))
+-1*(+(delta_i1k1-gdi1k1)*gdk0i0*(-guj1j0)+(-gdk0k1)*(-gdi1i0)*(-guj1j0))
+-1*(+(delta_i1k1-gdi1k1)*gdk0i0*(-gdj1j0)-(delta_i1k1-gdi1k1)*gdk0j0*(delta_i0j1-gdj1i0)+(delta_j1k1-gdj1k1)*gdk0i0*gdi1j0+(delta_j1k1-gdj1k1)*gdk0j0*(-gdi1i0)+(-gdk0k1)*(-gdi1i0)*(-gdj1j0)+(-gdk0k1)*(delta_i0j1-gdj1i0)*gdi1j0)
++1*(+(delta_i1k1-gdi1k1)*gdk0i0*(-guj0j1)+(-gdk0k1)*(-gdi1i0)*(-guj0j1))
++1*(+(delta_i1k1-gdi1k1)*gdk0i0*(-gdj0j1)-(delta_i1k1-gdi1k1)*gdk0j1*(delta_i0j0-gdj0i0)+(delta_j0k1-gdj0k1)*gdk0i0*gdi1j1+(delta_j0k1-gdj0k1)*gdk0j1*(-gdi1i0)+(-gdk0k1)*(-gdi1i0)*(-gdj0j1)+(-gdk0k1)*(delta_i0j0-gdj0i0)*gdi1j1)
++1*(+(-gdk0k1)*(-gui0i1)*(-guj1j0)+(-gdk0k1)*(delta_i1j1-guj1i1)*gui0j0)
++1*(+(delta_j1k1-gdj1k1)*gdk0j0*(-gui0i1)+(-gdk0k1)*(-gui0i1)*(-gdj1j0))
+-1*(+(-gdk0k1)*(-gui0i1)*(-guj0j1)+(-gdk0k1)*(delta_i1j0-guj0i1)*gui0j1)
+-1*(+(delta_j0k1-gdj0k1)*gdk0j1*(-gui0i1)+(-gdk0k1)*(-gui0i1)*(-gdj0j1))
++1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-guj1j0)+(-gdk0k1)*(-gdi0i1)*(-guj1j0))
++1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-gdj1j0)-(delta_i0k1-gdi0k1)*gdk0j0*(delta_i1j1-gdj1i1)+(delta_j1k1-gdj1k1)*gdk0i1*gdi0j0+(delta_j1k1-gdj1k1)*gdk0j0*(-gdi0i1)+(-gdk0k1)*(-gdi0i1)*(-gdj1j0)+(-gdk0k1)*(delta_i1j1-gdj1i1)*gdi0j0)
+-1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-guj0j1)+(-gdk0k1)*(-gdi0i1)*(-guj0j1))
+-1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-gdj0j1)-(delta_i0k1-gdi0k1)*gdk0j1*(delta_i1j0-gdj0i1)+(delta_j0k1-gdj0k1)*gdk0i1*gdi0j1+(delta_j0k1-gdj0k1)*gdk0j1*(-gdi0i1)+(-gdk0k1)*(-gdi0i1)*(-gdj0j1)+(-gdk0k1)*(delta_i1j0-gdj0i1)*gdi0j1);
+        }
+        }
+	}
 
 	if (meas_2bond_corr)
 	for (int c = 0; c < num_b2; c++) {
@@ -472,6 +642,193 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 	}
 	}
 	}
+                                           
+        // no delta functions here.
+	if (meas_3curr)
+	#pragma omp parallel for
+	for (int t = 1; t < L; t++) {
+		const double *const restrict Gu0t_t = Gu0t + N*N*t;
+		const double *const restrict Gutt_t = Gutt + N*N*t;
+		const double *const restrict Gut0_t = Gut0 + N*N*t;
+		const double *const restrict Gd0t_t = Gd0t + N*N*t;
+		const double *const restrict Gdtt_t = Gdtt + N*N*t;
+		const double *const restrict Gdt0_t = Gdt0 + N*N*t;
+        for (int dt = 0; (t+dt) < L; dt++) {
+		const double *const restrict Gu0t_dt = Gu0t + N*N*dt;
+		const double *const restrict Gutt_dt = Gutt + N*N*dt;
+		const double *const restrict Gut0_dt = Gut0 + N*N*dt;
+		const double *const restrict Gd0t_dt = Gd0t + N*N*dt;
+		const double *const restrict Gdtt_dt = Gdtt + N*N*dt;
+		const double *const restrict Gdt0_dt = Gdt0 + N*N*dt;
+                const int delta_dt = (dt == 0);
+                const double *const restrict Gu0t_tdt = Gu0t + N*N*(t+dt);
+		const double *const restrict Gutt_tdt = Gutt + N*N*(t+dt);
+		const double *const restrict Gut0_tdt = Gut0 + N*N*(t+dt);
+		const double *const restrict Gd0t_tdt = Gd0t + N*N*(t+dt);
+		const double *const restrict Gdtt_tdt = Gdtt + N*N*(t+dt);
+		const double *const restrict Gdt0_tdt = Gdt0 + N*N*(t+dt);
+	for (int c = 0; c < num_b; c++) {
+		const int j0 = p->bonds[c];
+		const int j1 = p->bonds[c + num_b];
+	for (int b1 = 0; b1 < num_b; b1++) {
+		const int i0 = p->bonds[b1];
+		const int i1 = p->bonds[b1 + num_b];
+        for (int b2 = 0; b2 < num_b; b2++) {
+		const int k0 = p->bonds[b2];
+		const int k1 = p->bonds[b2 + num_b];
+                
+		const int bbb = p->map_bb[(b2 + b1*num_b + c*num_b*num_b];
+		const double pre = (double)sign / p->degen_bbb[bbb];
+		const int delta_i0k0 = (i0 == k0)*delta_dt;
+		const int delta_i1k0 = (i1 == k0)*delta_dt;
+		const int delta_i0k1 = (i0 == k1)*delta_dt;
+		const int delta_i1k1 = (i1 == k1)*delta_dt;
+		
+		const double gui0i0 = Gutt_t[i0 + i0*N];
+		const double gui1i0 = Gutt_t[i1 + i0*N];
+		const double gui0i1 = Gutt_t[i0 + i1*N];
+		const double gui1i1 = Gutt_t[i1 + i1*N];
+		const double gui0j0 = Gut0_t[i0 + j0*N];
+		const double gui1j0 = Gut0_t[i1 + j0*N];
+		const double gui0j1 = Gut0_t[i0 + j1*N];
+		const double gui1j1 = Gut0_t[i1 + j1*N];
+		const double guj0i0 = Gu0t_t[j0 + i0*N];
+		const double guj1i0 = Gu0t_t[j1 + i0*N];
+		const double guj0i1 = Gu0t_t[j0 + i1*N];
+		const double guj1i1 = Gu0t_t[j1 + i1*N];
+		const double guj0j0 = Gu00[j0 + j0*N];
+		const double guj1j0 = Gu00[j1 + j0*N];
+		const double guj0j1 = Gu00[j0 + j1*N];
+		const double guj1j1 = Gu00[j1 + j1*N];
+		const double gdi0i0 = Gdtt_t[i0 + i0*N];
+		const double gdi1i0 = Gdtt_t[i1 + i0*N];
+		const double gdi0i1 = Gdtt_t[i0 + i1*N];
+		const double gdi1i1 = Gdtt_t[i1 + i1*N];
+		const double gdi0j0 = Gdt0_t[i0 + j0*N];
+		const double gdi1j0 = Gdt0_t[i1 + j0*N];
+		const double gdi0j1 = Gdt0_t[i0 + j1*N];
+		const double gdi1j1 = Gdt0_t[i1 + j1*N];
+		const double gdj0i0 = Gd0t_t[j0 + i0*N];
+		const double gdj1i0 = Gd0t_t[j1 + i0*N];
+		const double gdj0i1 = Gd0t_t[j0 + i1*N];
+		const double gdj1i1 = Gd0t_t[j1 + i1*N];
+		const double gdj0j0 = Gd00[j0 + j0*N];
+		const double gdj1j0 = Gd00[j1 + j0*N];
+		const double gdj0j1 = Gd00[j0 + j1*N];
+		const double gdj1j1 = Gd00[j1 + j1*N];
+                                           
+                const double guk0k0 = Gutt_tdt[k0 + k0*N];
+		const double guk1k0 = Gutt_tdt[k1 + k0*N];
+		const double guk0k1 = Gutt_tdt[k0 + k1*N];
+		const double guk1k1 = Gutt_tdt[k1 + k1*N];
+		const double guk0j0 = Gut0_tdt[k0 + j0*N];
+		const double guk1j0 = Gut0_tdt[k1 + j0*N];
+		const double guk0j1 = Gut0_tdt[k0 + j1*N];
+		const double guk1j1 = Gut0_tdt[k1 + j1*N];
+		const double guj0k0 = Gu0t_tdt[j0 + k0*N];
+		const double guj1k0 = Gu0t_tdt[j1 + k0*N];
+		const double guj0k1 = Gu0t_tdt[j0 + k1*N];
+		const double guj1k1 = Gu0t_tdt[j1 + k1*N];
+		const double gdk0k0 = Gdtt_tdt[k0 + k0*N];
+		const double gdk1k0 = Gdtt_tdt[k1 + k0*N];
+		const double gdk0k1 = Gdtt_tdt[k0 + k1*N];
+		const double gdk1k1 = Gdtt_tdt[k1 + k1*N];
+		const double gdk0j0 = Gdt0_tdt[k0 + j0*N];
+		const double gdk1j0 = Gdt0_tdt[k1 + j0*N];
+		const double gdk0j1 = Gdt0_tdt[k0 + j1*N];
+		const double gdk1j1 = Gdt0_tdt[k1 + j1*N];
+		const double gdj0k0 = Gd0t_tdt[j0 + k0*N];
+		const double gdj1k0 = Gd0t_tdt[j1 + k0*N];
+		const double gdj0k1 = Gd0t_tdt[j0 + k1*N];
+		const double gdj1k1 = Gd0t_tdt[j1 + k1*N];
+
+		const double guk0i0 = Gut0_dt[k0 + i0*N];
+		const double guk1i0 = Gut0_dt[k1 + i0*N];
+		const double guk0i1 = Gut0_dt[k0 + i1*N];
+		const double guk1i1 = Gut0_dt[k1 + i1*N];
+		const double gui0k0 = Gu0t_dt[i0 + k0*N];
+		const double gui1k0 = Gu0t_dt[i1 + k0*N];
+		const double gui0k1 = Gu0t_dt[i0 + k1*N];
+		const double gui1k1 = Gu0t_dt[i1 + k1*N];
+		const double gdk0i0 = Gdt0_dt[k0 + i0*N];
+		const double gdk1i0 = Gdt0_dt[k1 + i0*N];
+		const double gdk0i1 = Gdt0_dt[k0 + i1*N];
+		const double gdk1i1 = Gdt0_dt[k1 + i1*N];
+		const double gdi0k0 = Gd0t_dt[i0 + k0*N];
+		const double gdi1k0 = Gd0t_dt[i1 + k0*N];
+		const double gdi0k1 = Gd0t_dt[i0 + k1*N];
+		const double gdi1k1 = Gd0t_dt[i1 + k1*N];
+
+		m->jjj[bbb + num_bbb*dt + num_bbb*L*t] += 
++1*(+(delta_i1k0-gui1k0)*guk1i0*(-guj1j0)-(delta_i1k0-gui1k0)*guk1j0*(-guj1i0)+(-guj1k0)*guk1i0*gui1j0+(-guj1k0)*guk1j0*(-gui1i0)+(-guk1k0)*(-gui1i0)*(-guj1j0)+(-guk1k0)*(-guj1i0)*gui1j0)
++1*(+(delta_i1k0-gui1k0)*guk1i0*(-gdj1j0)+(-guk1k0)*(-gui1i0)*(-gdj1j0))
+-1*(+(delta_i1k0-gui1k0)*guk1i0*(-guj0j1)-(delta_i1k0-gui1k0)*guk1j1*(-guj0i0)+(-guj0k0)*guk1i0*gui1j1+(-guj0k0)*guk1j1*(-gui1i0)+(-guk1k0)*(-gui1i0)*(-guj0j1)+(-guk1k0)*(-guj0i0)*gui1j1)
+-1*(+(delta_i1k0-gui1k0)*guk1i0*(-gdj0j1)+(-guk1k0)*(-gui1i0)*(-gdj0j1))
++1*(+(-guj1k0)*guk1j0*(-gdi1i0)+(-guk1k0)*(-gdi1i0)*(-guj1j0))
++1*(+(-guk1k0)*(-gdi1i0)*(-gdj1j0)+(-guk1k0)*(-gdj1i0)*gdi1j0)
+-1*(+(-guj0k0)*guk1j1*(-gdi1i0)+(-guk1k0)*(-gdi1i0)*(-guj0j1))
+-1*(+(-guk1k0)*(-gdi1i0)*(-gdj0j1)+(-guk1k0)*(-gdj0i0)*gdi1j1)
+-1*(+(delta_i0k0-gui0k0)*guk1i1*(-guj1j0)-(delta_i0k0-gui0k0)*guk1j0*(-guj1i1)+(-guj1k0)*guk1i1*gui0j0+(-guj1k0)*guk1j0*(-gui0i1)+(-guk1k0)*(-gui0i1)*(-guj1j0)+(-guk1k0)*(-guj1i1)*gui0j0)
+-1*(+(delta_i0k0-gui0k0)*guk1i1*(-gdj1j0)+(-guk1k0)*(-gui0i1)*(-gdj1j0))
++1*(+(delta_i0k0-gui0k0)*guk1i1*(-guj0j1)-(delta_i0k0-gui0k0)*guk1j1*(-guj0i1)+(-guj0k0)*guk1i1*gui0j1+(-guj0k0)*guk1j1*(-gui0i1)+(-guk1k0)*(-gui0i1)*(-guj0j1)+(-guk1k0)*(-guj0i1)*gui0j1)
++1*(+(delta_i0k0-gui0k0)*guk1i1*(-gdj0j1)+(-guk1k0)*(-gui0i1)*(-gdj0j1))
+-1*(+(-guj1k0)*guk1j0*(-gdi0i1)+(-guk1k0)*(-gdi0i1)*(-guj1j0))
+-1*(+(-guk1k0)*(-gdi0i1)*(-gdj1j0)+(-guk1k0)*(-gdj1i1)*gdi0j0)
++1*(+(-guj0k0)*guk1j1*(-gdi0i1)+(-guk1k0)*(-gdi0i1)*(-guj0j1))
++1*(+(-guk1k0)*(-gdi0i1)*(-gdj0j1)+(-guk1k0)*(-gdj0i1)*gdi0j1)
++1*(+(-gdk1k0)*(-gui1i0)*(-guj1j0)+(-gdk1k0)*(-guj1i0)*gui1j0)
++1*(+(-gdj1k0)*gdk1j0*(-gui1i0)+(-gdk1k0)*(-gui1i0)*(-gdj1j0))
+-1*(+(-gdk1k0)*(-gui1i0)*(-guj0j1)+(-gdk1k0)*(-guj0i0)*gui1j1)
+-1*(+(-gdj0k0)*gdk1j1*(-gui1i0)+(-gdk1k0)*(-gui1i0)*(-gdj0j1))
++1*(+(delta_i1k0-gdi1k0)*gdk1i0*(-guj1j0)+(-gdk1k0)*(-gdi1i0)*(-guj1j0))
++1*(+(delta_i1k0-gdi1k0)*gdk1i0*(-gdj1j0)-(delta_i1k0-gdi1k0)*gdk1j0*(-gdj1i0)+(-gdj1k0)*gdk1i0*gdi1j0+(-gdj1k0)*gdk1j0*(-gdi1i0)+(-gdk1k0)*(-gdi1i0)*(-gdj1j0)+(-gdk1k0)*(-gdj1i0)*gdi1j0)
+-1*(+(delta_i1k0-gdi1k0)*gdk1i0*(-guj0j1)+(-gdk1k0)*(-gdi1i0)*(-guj0j1))
+-1*(+(delta_i1k0-gdi1k0)*gdk1i0*(-gdj0j1)-(delta_i1k0-gdi1k0)*gdk1j1*(-gdj0i0)+(-gdj0k0)*gdk1i0*gdi1j1+(-gdj0k0)*gdk1j1*(-gdi1i0)+(-gdk1k0)*(-gdi1i0)*(-gdj0j1)+(-gdk1k0)*(-gdj0i0)*gdi1j1)
+-1*(+(-gdk1k0)*(-gui0i1)*(-guj1j0)+(-gdk1k0)*(-guj1i1)*gui0j0)
+-1*(+(-gdj1k0)*gdk1j0*(-gui0i1)+(-gdk1k0)*(-gui0i1)*(-gdj1j0))
++1*(+(-gdk1k0)*(-gui0i1)*(-guj0j1)+(-gdk1k0)*(-guj0i1)*gui0j1)
++1*(+(-gdj0k0)*gdk1j1*(-gui0i1)+(-gdk1k0)*(-gui0i1)*(-gdj0j1))
+-1*(+(delta_i0k0-gdi0k0)*gdk1i1*(-guj1j0)+(-gdk1k0)*(-gdi0i1)*(-guj1j0))
+-1*(+(delta_i0k0-gdi0k0)*gdk1i1*(-gdj1j0)-(delta_i0k0-gdi0k0)*gdk1j0*(-gdj1i1)+(-gdj1k0)*gdk1i1*gdi0j0+(-gdj1k0)*gdk1j0*(-gdi0i1)+(-gdk1k0)*(-gdi0i1)*(-gdj1j0)+(-gdk1k0)*(-gdj1i1)*gdi0j0)
++1*(+(delta_i0k0-gdi0k0)*gdk1i1*(-guj0j1)+(-gdk1k0)*(-gdi0i1)*(-guj0j1))
++1*(+(delta_i0k0-gdi0k0)*gdk1i1*(-gdj0j1)-(delta_i0k0-gdi0k0)*gdk1j1*(-gdj0i1)+(-gdj0k0)*gdk1i1*gdi0j1+(-gdj0k0)*gdk1j1*(-gdi0i1)+(-gdk1k0)*(-gdi0i1)*(-gdj0j1)+(-gdk1k0)*(-gdj0i1)*gdi0j1)
+-1*(+(delta_i1k1-gui1k1)*guk0i0*(-guj1j0)-(delta_i1k1-gui1k1)*guk0j0*(-guj1i0)+(-guj1k1)*guk0i0*gui1j0+(-guj1k1)*guk0j0*(-gui1i0)+(-guk0k1)*(-gui1i0)*(-guj1j0)+(-guk0k1)*(-guj1i0)*gui1j0)
+-1*(+(delta_i1k1-gui1k1)*guk0i0*(-gdj1j0)+(-guk0k1)*(-gui1i0)*(-gdj1j0))
++1*(+(delta_i1k1-gui1k1)*guk0i0*(-guj0j1)-(delta_i1k1-gui1k1)*guk0j1*(-guj0i0)+(-guj0k1)*guk0i0*gui1j1+(-guj0k1)*guk0j1*(-gui1i0)+(-guk0k1)*(-gui1i0)*(-guj0j1)+(-guk0k1)*(-guj0i0)*gui1j1)
++1*(+(delta_i1k1-gui1k1)*guk0i0*(-gdj0j1)+(-guk0k1)*(-gui1i0)*(-gdj0j1))
+-1*(+(-guj1k1)*guk0j0*(-gdi1i0)+(-guk0k1)*(-gdi1i0)*(-guj1j0))
+-1*(+(-guk0k1)*(-gdi1i0)*(-gdj1j0)+(-guk0k1)*(-gdj1i0)*gdi1j0)
++1*(+(-guj0k1)*guk0j1*(-gdi1i0)+(-guk0k1)*(-gdi1i0)*(-guj0j1))
++1*(+(-guk0k1)*(-gdi1i0)*(-gdj0j1)+(-guk0k1)*(-gdj0i0)*gdi1j1)
++1*(+(delta_i0k1-gui0k1)*guk0i1*(-guj1j0)-(delta_i0k1-gui0k1)*guk0j0*(-guj1i1)+(-guj1k1)*guk0i1*gui0j0+(-guj1k1)*guk0j0*(-gui0i1)+(-guk0k1)*(-gui0i1)*(-guj1j0)+(-guk0k1)*(-guj1i1)*gui0j0)
++1*(+(delta_i0k1-gui0k1)*guk0i1*(-gdj1j0)+(-guk0k1)*(-gui0i1)*(-gdj1j0))
+-1*(+(delta_i0k1-gui0k1)*guk0i1*(-guj0j1)-(delta_i0k1-gui0k1)*guk0j1*(-guj0i1)+(-guj0k1)*guk0i1*gui0j1+(-guj0k1)*guk0j1*(-gui0i1)+(-guk0k1)*(-gui0i1)*(-guj0j1)+(-guk0k1)*(-guj0i1)*gui0j1)
+-1*(+(delta_i0k1-gui0k1)*guk0i1*(-gdj0j1)+(-guk0k1)*(-gui0i1)*(-gdj0j1))
++1*(+(-guj1k1)*guk0j0*(-gdi0i1)+(-guk0k1)*(-gdi0i1)*(-guj1j0))
++1*(+(-guk0k1)*(-gdi0i1)*(-gdj1j0)+(-guk0k1)*(-gdj1i1)*gdi0j0)
+-1*(+(-guj0k1)*guk0j1*(-gdi0i1)+(-guk0k1)*(-gdi0i1)*(-guj0j1))
+-1*(+(-guk0k1)*(-gdi0i1)*(-gdj0j1)+(-guk0k1)*(-gdj0i1)*gdi0j1)
+-1*(+(-gdk0k1)*(-gui1i0)*(-guj1j0)+(-gdk0k1)*(-guj1i0)*gui1j0)
+-1*(+(-gdj1k1)*gdk0j0*(-gui1i0)+(-gdk0k1)*(-gui1i0)*(-gdj1j0))
++1*(+(-gdk0k1)*(-gui1i0)*(-guj0j1)+(-gdk0k1)*(-guj0i0)*gui1j1)
++1*(+(-gdj0k1)*gdk0j1*(-gui1i0)+(-gdk0k1)*(-gui1i0)*(-gdj0j1))
+-1*(+(delta_i1k1-gdi1k1)*gdk0i0*(-guj1j0)+(-gdk0k1)*(-gdi1i0)*(-guj1j0))
+-1*(+(delta_i1k1-gdi1k1)*gdk0i0*(-gdj1j0)-(delta_i1k1-gdi1k1)*gdk0j0*(-gdj1i0)+(-gdj1k1)*gdk0i0*gdi1j0+(-gdj1k1)*gdk0j0*(-gdi1i0)+(-gdk0k1)*(-gdi1i0)*(-gdj1j0)+(-gdk0k1)*(-gdj1i0)*gdi1j0)
++1*(+(delta_i1k1-gdi1k1)*gdk0i0*(-guj0j1)+(-gdk0k1)*(-gdi1i0)*(-guj0j1))
++1*(+(delta_i1k1-gdi1k1)*gdk0i0*(-gdj0j1)-(delta_i1k1-gdi1k1)*gdk0j1*(-gdj0i0)+(-gdj0k1)*gdk0i0*gdi1j1+(-gdj0k1)*gdk0j1*(-gdi1i0)+(-gdk0k1)*(-gdi1i0)*(-gdj0j1)+(-gdk0k1)*(-gdj0i0)*gdi1j1)
++1*(+(-gdk0k1)*(-gui0i1)*(-guj1j0)+(-gdk0k1)*(-guj1i1)*gui0j0)
++1*(+(-gdj1k1)*gdk0j0*(-gui0i1)+(-gdk0k1)*(-gui0i1)*(-gdj1j0))
+-1*(+(-gdk0k1)*(-gui0i1)*(-guj0j1)+(-gdk0k1)*(-guj0i1)*gui0j1)
+-1*(+(-gdj0k1)*gdk0j1*(-gui0i1)+(-gdk0k1)*(-gui0i1)*(-gdj0j1))
++1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-guj1j0)+(-gdk0k1)*(-gdi0i1)*(-guj1j0))
++1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-gdj1j0)-(delta_i0k1-gdi0k1)*gdk0j0*(-gdj1i1)+(-gdj1k1)*gdk0i1*gdi0j0+(-gdj1k1)*gdk0j0*(-gdi0i1)+(-gdk0k1)*(-gdi0i1)*(-gdj1j0)+(-gdk0k1)*(-gdj1i1)*gdi0j0)
+-1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-guj0j1)+(-gdk0k1)*(-gdi0i1)*(-guj0j1))
+-1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-gdj0j1)-(delta_i0k1-gdi0k1)*gdk0j1*(-gdj0i1)+(-gdj0k1)*gdk0i1*gdi0j1+(-gdj0k1)*gdk0j1*(-gdi0i1)+(-gdk0k1)*(-gdi0i1)*(-gdj0j1)+(-gdk0k1)*(-gdj0i1)*gdi0j1);
+        }
+        }
+	}
+	}
+        }
 
     // no delta functions here.
 	if (meas_2bond_corr)
