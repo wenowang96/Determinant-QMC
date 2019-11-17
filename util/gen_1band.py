@@ -145,6 +145,32 @@ def create_1(filename=None, overwrite=False, seed=None,
                             kk =  k + N*(ii + bps*jj)
                             map_bb[j + N*jj, i + N*ii] = kk
                             degen_bb[kk] += 1
+                            
+    # 3 bond mapping
+    num_bbb = bps*bps*bps*N*N
+    map_bbb = np.zeros((num_b, num_b, num_b), dtype=np.int32)
+    degen_bbb = np.zeros(num_bbb, dtype = np.int32)
+    for jy in range(Ny):
+        for jx in range(Nx):
+            j = jx + Nx*jy
+            for i1y in range(Ny):
+                for i1x in range(Nx):
+                    i1 = i1x + Nx*i1y
+                    d1y = (i1y - jy) % Ny
+                    d1x = (i1x - jx) % Nx
+                    d1 = d1x + Nx*d1y
+                    for i2y in range(Ny):
+                        for i2x in range(Nx):
+                            i2 = i2x + Nx*i2y
+                            d2y = (i2y - jy) % Ny
+                            d2x = (i2x - jx) % Nx
+                            d2 = d2x + Nx*d2y
+                            for jj in range(bps):
+                                for ii1 in range(bps):
+                                    for ii2 in range(bps):
+                                        dd =  d2 + N*d1 + N*N*(ii2 + bps*ii1 + bps*bps*jj)
+                                        map_bbb[j + N*jj, i1 + N*ii1, i2 + N*ii2] = dd
+                                        degen_bbb[dd] += 1
 
     # 2-bond definitions
     b2ps = 12 if tp != 0.0 else 6  # 2-bonds per site
@@ -259,6 +285,7 @@ def create_1(filename=None, overwrite=False, seed=None,
         f["params"]["bond2s"] = bond2s
         f["params"]["map_bs"] = map_bs
         f["params"]["map_bb"] = map_bb
+        f["params"]["map_bbb"] = map_bbb
         f["params"]["map_b2b2"] = map_b2b2
         f["params"]["K"] = K
         f["params"]["U"] = U_i
@@ -284,11 +311,13 @@ def create_1(filename=None, overwrite=False, seed=None,
         f["params"]["num_b2"] = num_b2
         f["params"]["num_bs"] = num_bs
         f["params"]["num_bb"] = num_bb
+        f["params"]["num_bbb"] = num_bbb
         f["params"]["num_b2b2"] = num_b2b2
         f["params"]["degen_i"] = degen_i
         f["params"]["degen_ij"] = degen_ij
         f["params"]["degen_bs"] = degen_bs
         f["params"]["degen_bb"] = degen_bb
+        f["params"]["degen_bbb"] = degen_bbb
         f["params"]["degen_b2b2"] = degen_b2b2
         f["params"]["exp_K"] = exp_K
         f["params"]["inv_exp_K"] = inv_exp_K
@@ -339,6 +368,8 @@ def create_1(filename=None, overwrite=False, seed=None,
                 f["meas_uneqlt"]["jsjs"] = np.zeros(num_bb*L, dtype=np.float64)
                 f["meas_uneqlt"]["kk"] = np.zeros(num_bb*L, dtype=np.float64)
                 f["meas_uneqlt"]["ksks"] = np.zeros(num_bb*L, dtype=np.float64)
+            if meas_3curr:
+                f["meas_uneqlt"]["jjj"] = np.zeros(num_bbb*L*L, dtype=np.float64)
             if meas_2bond_corr:
                 f["meas_uneqlt"]["pair_b2b2"] = np.zeros(num_b2b2*L, dtype=np.float64)
                 f["meas_uneqlt"]["j2j2"] = np.zeros(num_b2b2*L, dtype=np.float64)
