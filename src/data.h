@@ -56,6 +56,7 @@ struct meas_uneqlt {
 	double *pair_bb;
 	double *jj, *jsjs;
 	double *kk, *ksks;
+        double *jjj;
 	double *pair_b2b2;
 	double *j2j2, *js2js2;
 	double *k2k2, *ks2ks2;
