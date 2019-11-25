@@ -92,7 +92,7 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 			sim->m_ue.ksks    = my_calloc(num_bb*L * sizeof(double));
 		}
                 if (sim->p.meas_3curr) {
-			sim->m_ue.jjj = my_calloc(num_bbb*L*L * sizeof(double));
+			sim->m_ue.jjj = my_calloc(num_bbb*L * sizeof(double));
 		}
 		if (sim->p.meas_2bond_corr) {
 			sim->m_ue.pair_b2b2= my_calloc(num_b2b2*L * sizeof(double));
