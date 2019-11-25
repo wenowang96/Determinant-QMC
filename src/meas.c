@@ -513,21 +513,22 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
                 
 		const int bbb1 = p->map_bbb[b2 + b1*num_b + c*num_b*num_b];
                 const int bbb2 = p->map_bbb[b1 + b2*num_b + c*num_b*num_b];
-		const double pre = (double)sign / p->degen_bbb[bbb];
+		const double pre1 = (double)sign / p->degen_bbb[bbb1];
+                const double pre2 = (double)sign / p->degen_bbb[bbb2];
 		const int delta_i0k0 = (i0 == k0)*delta_dt;
 		const int delta_i1k0 = (i1 == k0)*delta_dt;
 		const int delta_i0k1 = (i0 == k1)*delta_dt;
 		const int delta_i1k1 = (i1 == k1)*delta_dt;
 		
-                const int delta_j0i0 = (j0 == i0)*delta_dt;
-		const int delta_j1i0 = (j1 == i0)*delta_dt;
-		const int delta_j0i1 = (j0 == i1)*delta_dt;
-		const int delta_j1i1 = (j1 == i1)*delta_dt;
+                const int delta_i0j0 = (j0 == i0)*delta_t;
+		const int delta_i0j1 = (j1 == i0)*delta_t;
+		const int delta_i1j0 = (j0 == i1)*delta_t;
+		const int delta_i1j1 = (j1 == i1)*delta_t;
                 
-                const int delta_k0j0 = (k0 == j0)*delta_dt;
-		const int delta_k1j0 = (k1 == j0)*delta_dt;
-		const int delta_k0j1 = (k0 == j1)*delta_dt;
-		const int delta_k1j1 = (k1 == j1)*delta_dt;
+                const int delta_j0k0 = (k0 == j0)*delta_tdt;
+		const int delta_j0k1 = (k1 == j0)*delta_tdt;
+		const int delta_j1k0 = (k0 == j1)*delta_tdt;
+		const int delta_j1k1 = (k1 == j1)*delta_tdt;
                 
 		const double gui0i0 = Gutt_t[i0 + i0*N];
 		const double gui1i0 = Gutt_t[i1 + i0*N];
@@ -605,70 +606,71 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const double gdi1k1 = Gd0t_dt[i1 + k1*N];
 
 		const double meas= 
-+1*(+(delta_i1k0-gui1k0)*guk1i0*(delta_j0j1-guj1j0)-(delta_i1k0-gui1k0)*guk1j0*(delta_i0j1-guj1i0)+(delta_j1k0-guj1k0)*guk1i0*gui1j0+(delta_j1k0-guj1k0)*guk1j0*(delta_i0i1-gui1i0)+(delta_k0k1-guk1k0)*(delta_i0i1-gui1i0)*(delta_j0j1-guj1j0)+(delta_k0k1-guk1k0)*(delta_i0j1-guj1i0)*gui1j0)
-+1*(+(delta_i1k0-gui1k0)*guk1i0*(delta_j0j1-gdj1j0)+(delta_k0k1-guk1k0)*(delta_i0i1-gui1i0)*(delta_j0j1-gdj1j0))
--1*(+(delta_i1k0-gui1k0)*guk1i0*(delta_j0j1-guj0j1)-(delta_i1k0-gui1k0)*guk1j1*(delta_i0j0-guj0i0)+(delta_j0k0-guj0k0)*guk1i0*gui1j1+(delta_j0k0-guj0k0)*guk1j1*(delta_i0i1-gui1i0)+(delta_k0k1-guk1k0)*(delta_i0i1-gui1i0)*(delta_j0j1-guj0j1)+(delta_k0k1-guk1k0)*(delta_i0j0-guj0i0)*gui1j1)
--1*(+(delta_i1k0-gui1k0)*guk1i0*(delta_j0j1-gdj0j1)+(delta_k0k1-guk1k0)*(delta_i0i1-gui1i0)*(delta_j0j1-gdj0j1))
-+1*(+(delta_j1k0-guj1k0)*guk1j0*(delta_i0i1-gdi1i0)+(delta_k0k1-guk1k0)*(delta_i0i1-gdi1i0)*(delta_j0j1-guj1j0))
-+1*(+(delta_k0k1-guk1k0)*(delta_i0i1-gdi1i0)*(delta_j0j1-gdj1j0)+(delta_k0k1-guk1k0)*(delta_i0j1-gdj1i0)*gdi1j0)
--1*(+(delta_j0k0-guj0k0)*guk1j1*(delta_i0i1-gdi1i0)+(delta_k0k1-guk1k0)*(delta_i0i1-gdi1i0)*(delta_j0j1-guj0j1))
--1*(+(delta_k0k1-guk1k0)*(delta_i0i1-gdi1i0)*(delta_j0j1-gdj0j1)+(delta_k0k1-guk1k0)*(delta_i0j0-gdj0i0)*gdi1j1)
--1*(+(delta_i0k0-gui0k0)*guk1i1*(delta_j0j1-guj1j0)-(delta_i0k0-gui0k0)*guk1j0*(delta_i1j1-guj1i1)+(delta_j1k0-guj1k0)*guk1i1*gui0j0+(delta_j1k0-guj1k0)*guk1j0*(delta_i0i1-gui0i1)+(delta_k0k1-guk1k0)*(delta_i0i1-gui0i1)*(delta_j0j1-guj1j0)+(delta_k0k1-guk1k0)*(delta_i1j1-guj1i1)*gui0j0)
--1*(+(delta_i0k0-gui0k0)*guk1i1*(delta_j0j1-gdj1j0)+(delta_k0k1-guk1k0)*(delta_i0i1-gui0i1)*(delta_j0j1-gdj1j0))
-+1*(+(delta_i0k0-gui0k0)*guk1i1*(delta_j0j1-guj0j1)-(delta_i0k0-gui0k0)*guk1j1*(delta_i1j0-guj0i1)+(delta_j0k0-guj0k0)*guk1i1*gui0j1+(delta_j0k0-guj0k0)*guk1j1*(delta_i0i1-gui0i1)+(delta_k0k1-guk1k0)*(delta_i0i1-gui0i1)*(delta_j0j1-guj0j1)+(delta_k0k1-guk1k0)*(delta_i1j0-guj0i1)*gui0j1)
-+1*(+(delta_i0k0-gui0k0)*guk1i1*(delta_j0j1-gdj0j1)+(delta_k0k1-guk1k0)*(delta_i0i1-gui0i1)*(delta_j0j1-gdj0j1))
--1*(+(delta_j1k0-guj1k0)*guk1j0*(delta_i0i1-gdi0i1)+(delta_k0k1-guk1k0)*(delta_i0i1-gdi0i1)*(delta_j0j1-guj1j0))
--1*(+(delta_k0k1-guk1k0)*(delta_i0i1-gdi0i1)*(delta_j0j1-gdj1j0)+(delta_k0k1-guk1k0)*(delta_i1j1-gdj1i1)*gdi0j0)
-+1*(+(delta_j0k0-guj0k0)*guk1j1*(delta_i0i1-gdi0i1)+(delta_k0k1-guk1k0)*(delta_i0i1-gdi0i1)*(delta_j0j1-guj0j1))
-+1*(+(delta_k0k1-guk1k0)*(delta_i0i1-gdi0i1)*(delta_j0j1-gdj0j1)+(delta_k0k1-guk1k0)*(delta_i1j0-gdj0i1)*gdi0j1)
-+1*(+(delta_k0k1-gdk1k0)*(delta_i0i1-gui1i0)*(delta_j0j1-guj1j0)+(delta_k0k1-gdk1k0)*(delta_i0j1-guj1i0)*gui1j0)
-+1*(+(delta_j1k0-gdj1k0)*gdk1j0*(delta_i0i1-gui1i0)+(delta_k0k1-gdk1k0)*(delta_i0i1-gui1i0)*(delta_j0j1-gdj1j0))
--1*(+(delta_k0k1-gdk1k0)*(delta_i0i1-gui1i0)*(delta_j0j1-guj0j1)+(delta_k0k1-gdk1k0)*(delta_i0j0-guj0i0)*gui1j1)
--1*(+(delta_j0k0-gdj0k0)*gdk1j1*(delta_i0i1-gui1i0)+(delta_k0k1-gdk1k0)*(delta_i0i1-gui1i0)*(delta_j0j1-gdj0j1))
-+1*(+(delta_i1k0-gdi1k0)*gdk1i0*(delta_j0j1-guj1j0)+(delta_k0k1-gdk1k0)*(delta_i0i1-gdi1i0)*(delta_j0j1-guj1j0))
-+1*(+(delta_i1k0-gdi1k0)*gdk1i0*(delta_j0j1-gdj1j0)-(delta_i1k0-gdi1k0)*gdk1j0*(delta_i0j1-gdj1i0)+(delta_j1k0-gdj1k0)*gdk1i0*gdi1j0+(delta_j1k0-gdj1k0)*gdk1j0*(delta_i0i1-gdi1i0)+(delta_k0k1-gdk1k0)*(delta_i0i1-gdi1i0)*(delta_j0j1-gdj1j0)+(delta_k0k1-gdk1k0)*(delta_i0j1-gdj1i0)*gdi1j0)
--1*(+(delta_i1k0-gdi1k0)*gdk1i0*(delta_j0j1-guj0j1)+(delta_k0k1-gdk1k0)*(delta_i0i1-gdi1i0)*(delta_j0j1-guj0j1))
--1*(+(delta_i1k0-gdi1k0)*gdk1i0*(delta_j0j1-gdj0j1)-(delta_i1k0-gdi1k0)*gdk1j1*(delta_i0j0-gdj0i0)+(delta_j0k0-gdj0k0)*gdk1i0*gdi1j1+(delta_j0k0-gdj0k0)*gdk1j1*(delta_i0i1-gdi1i0)+(delta_k0k1-gdk1k0)*(delta_i0i1-gdi1i0)*(delta_j0j1-gdj0j1)+(delta_k0k1-gdk1k0)*(delta_i0j0-gdj0i0)*gdi1j1)
--1*(+(delta_k0k1-gdk1k0)*(delta_i0i1-gui0i1)*(delta_j0j1-guj1j0)+(delta_k0k1-gdk1k0)*(delta_i1j1-guj1i1)*gui0j0)
--1*(+(delta_j1k0-gdj1k0)*gdk1j0*(delta_i0i1-gui0i1)+(delta_k0k1-gdk1k0)*(delta_i0i1-gui0i1)*(delta_j0j1-gdj1j0))
-+1*(+(delta_k0k1-gdk1k0)*(delta_i0i1-gui0i1)*(delta_j0j1-guj0j1)+(delta_k0k1-gdk1k0)*(delta_i1j0-guj0i1)*gui0j1)
-+1*(+(delta_j0k0-gdj0k0)*gdk1j1*(delta_i0i1-gui0i1)+(delta_k0k1-gdk1k0)*(delta_i0i1-gui0i1)*(delta_j0j1-gdj0j1))
--1*(+(delta_i0k0-gdi0k0)*gdk1i1*(delta_j0j1-guj1j0)+(delta_k0k1-gdk1k0)*(delta_i0i1-gdi0i1)*(delta_j0j1-guj1j0))
--1*(+(delta_i0k0-gdi0k0)*gdk1i1*(delta_j0j1-gdj1j0)-(delta_i0k0-gdi0k0)*gdk1j0*(delta_i1j1-gdj1i1)+(delta_j1k0-gdj1k0)*gdk1i1*gdi0j0+(delta_j1k0-gdj1k0)*gdk1j0*(delta_i0i1-gdi0i1)+(delta_k0k1-gdk1k0)*(delta_i0i1-gdi0i1)*(delta_j0j1-gdj1j0)+(delta_k0k1-gdk1k0)*(delta_i1j1-gdj1i1)*gdi0j0)
-+1*(+(delta_i0k0-gdi0k0)*gdk1i1*(delta_j0j1-guj0j1)+(delta_k0k1-gdk1k0)*(delta_i0i1-gdi0i1)*(delta_j0j1-guj0j1))
-+1*(+(delta_i0k0-gdi0k0)*gdk1i1*(delta_j0j1-gdj0j1)-(delta_i0k0-gdi0k0)*gdk1j1*(delta_i1j0-gdj0i1)+(delta_j0k0-gdj0k0)*gdk1i1*gdi0j1+(delta_j0k0-gdj0k0)*gdk1j1*(delta_i0i1-gdi0i1)+(delta_k0k1-gdk1k0)*(delta_i0i1-gdi0i1)*(delta_j0j1-gdj0j1)+(delta_k0k1-gdk1k0)*(delta_i1j0-gdj0i1)*gdi0j1)
--1*(+(delta_i1k1-gui1k1)*guk0i0*(delta_j0j1-guj1j0)-(delta_i1k1-gui1k1)*guk0j0*(delta_i0j1-guj1i0)+(delta_j1k1-guj1k1)*guk0i0*gui1j0+(delta_j1k1-guj1k1)*guk0j0*(delta_i0i1-gui1i0)+(delta_k0k1-guk0k1)*(delta_i0i1-gui1i0)*(delta_j0j1-guj1j0)+(delta_k0k1-guk0k1)*(delta_i0j1-guj1i0)*gui1j0)
--1*(+(delta_i1k1-gui1k1)*guk0i0*(delta_j0j1-gdj1j0)+(delta_k0k1-guk0k1)*(delta_i0i1-gui1i0)*(delta_j0j1-gdj1j0))
-+1*(+(delta_i1k1-gui1k1)*guk0i0*(delta_j0j1-guj0j1)-(delta_i1k1-gui1k1)*guk0j1*(delta_i0j0-guj0i0)+(delta_j0k1-guj0k1)*guk0i0*gui1j1+(delta_j0k1-guj0k1)*guk0j1*(delta_i0i1-gui1i0)+(delta_k0k1-guk0k1)*(delta_i0i1-gui1i0)*(delta_j0j1-guj0j1)+(delta_k0k1-guk0k1)*(delta_i0j0-guj0i0)*gui1j1)
-+1*(+(delta_i1k1-gui1k1)*guk0i0*(delta_j0j1-gdj0j1)+(delta_k0k1-guk0k1)*(delta_i0i1-gui1i0)*(delta_j0j1-gdj0j1))
--1*(+(delta_j1k1-guj1k1)*guk0j0*(delta_i0i1-gdi1i0)+(delta_k0k1-guk0k1)*(delta_i0i1-gdi1i0)*(delta_j0j1-guj1j0))
--1*(+(delta_k0k1-guk0k1)*(delta_i0i1-gdi1i0)*(delta_j0j1-gdj1j0)+(delta_k0k1-guk0k1)*(delta_i0j1-gdj1i0)*gdi1j0)
-+1*(+(delta_j0k1-guj0k1)*guk0j1*(delta_i0i1-gdi1i0)+(delta_k0k1-guk0k1)*(delta_i0i1-gdi1i0)*(delta_j0j1-guj0j1))
-+1*(+(delta_k0k1-guk0k1)*(delta_i0i1-gdi1i0)*(delta_j0j1-gdj0j1)+(delta_k0k1-guk0k1)*(delta_i0j0-gdj0i0)*gdi1j1)
-+1*(+(delta_i0k1-gui0k1)*guk0i1*(delta_j0j1-guj1j0)-(delta_i0k1-gui0k1)*guk0j0*(delta_i1j1-guj1i1)+(delta_j1k1-guj1k1)*guk0i1*gui0j0+(delta_j1k1-guj1k1)*guk0j0*(delta_i0i1-gui0i1)+(delta_k0k1-guk0k1)*(delta_i0i1-gui0i1)*(delta_j0j1-guj1j0)+(delta_k0k1-guk0k1)*(delta_i1j1-guj1i1)*gui0j0)
-+1*(+(delta_i0k1-gui0k1)*guk0i1*(delta_j0j1-gdj1j0)+(delta_k0k1-guk0k1)*(delta_i0i1-gui0i1)*(delta_j0j1-gdj1j0))
--1*(+(delta_i0k1-gui0k1)*guk0i1*(delta_j0j1-guj0j1)-(delta_i0k1-gui0k1)*guk0j1*(delta_i1j0-guj0i1)+(delta_j0k1-guj0k1)*guk0i1*gui0j1+(delta_j0k1-guj0k1)*guk0j1*(delta_i0i1-gui0i1)+(delta_k0k1-guk0k1)*(delta_i0i1-gui0i1)*(delta_j0j1-guj0j1)+(delta_k0k1-guk0k1)*(delta_i1j0-guj0i1)*gui0j1)
--1*(+(delta_i0k1-gui0k1)*guk0i1*(delta_j0j1-gdj0j1)+(delta_k0k1-guk0k1)*(delta_i0i1-gui0i1)*(delta_j0j1-gdj0j1))
-+1*(+(delta_j1k1-guj1k1)*guk0j0*(delta_i0i1-gdi0i1)+(delta_k0k1-guk0k1)*(delta_i0i1-gdi0i1)*(delta_j0j1-guj1j0))
-+1*(+(delta_k0k1-guk0k1)*(delta_i0i1-gdi0i1)*(delta_j0j1-gdj1j0)+(delta_k0k1-guk0k1)*(delta_i1j1-gdj1i1)*gdi0j0)
--1*(+(delta_j0k1-guj0k1)*guk0j1*(delta_i0i1-gdi0i1)+(delta_k0k1-guk0k1)*(delta_i0i1-gdi0i1)*(delta_j0j1-guj0j1))
--1*(+(delta_k0k1-guk0k1)*(delta_i0i1-gdi0i1)*(delta_j0j1-gdj0j1)+(delta_k0k1-guk0k1)*(delta_i1j0-gdj0i1)*gdi0j1)
--1*(+(delta_k0k1-gdk0k1)*(delta_i0i1-gui1i0)*(delta_j0j1-guj1j0)+(delta_k0k1-gdk0k1)*(delta_i0j1-guj1i0)*gui1j0)
--1*(+(delta_j1k1-gdj1k1)*gdk0j0*(delta_i0i1-gui1i0)+(delta_k0k1-gdk0k1)*(delta_i0i1-gui1i0)*(delta_j0j1-gdj1j0))
-+1*(+(delta_k0k1-gdk0k1)*(delta_i0i1-gui1i0)*(delta_j0j1-guj0j1)+(delta_k0k1-gdk0k1)*(delta_i0j0-guj0i0)*gui1j1)
-+1*(+(delta_j0k1-gdj0k1)*gdk0j1*(delta_i0i1-gui1i0)+(delta_k0k1-gdk0k1)*(delta_i0i1-gui1i0)*(delta_j0j1-gdj0j1))
--1*(+(delta_i1k1-gdi1k1)*gdk0i0*(delta_j0j1-guj1j0)+(delta_k0k1-gdk0k1)*(delta_i0i1-gdi1i0)*(delta_j0j1-guj1j0))
--1*(+(delta_i1k1-gdi1k1)*gdk0i0*(delta_j0j1-gdj1j0)-(delta_i1k1-gdi1k1)*gdk0j0*(delta_i0j1-gdj1i0)+(delta_j1k1-gdj1k1)*gdk0i0*gdi1j0+(delta_j1k1-gdj1k1)*gdk0j0*(delta_i0i1-gdi1i0)+(delta_k0k1-gdk0k1)*(delta_i0i1-gdi1i0)*(delta_j0j1-gdj1j0)+(delta_k0k1-gdk0k1)*(delta_i0j1-gdj1i0)*gdi1j0)
-+1*(+(delta_i1k1-gdi1k1)*gdk0i0*(delta_j0j1-guj0j1)+(delta_k0k1-gdk0k1)*(delta_i0i1-gdi1i0)*(delta_j0j1-guj0j1))
-+1*(+(delta_i1k1-gdi1k1)*gdk0i0*(delta_j0j1-gdj0j1)-(delta_i1k1-gdi1k1)*gdk0j1*(delta_i0j0-gdj0i0)+(delta_j0k1-gdj0k1)*gdk0i0*gdi1j1+(delta_j0k1-gdj0k1)*gdk0j1*(delta_i0i1-gdi1i0)+(delta_k0k1-gdk0k1)*(delta_i0i1-gdi1i0)*(delta_j0j1-gdj0j1)+(delta_k0k1-gdk0k1)*(delta_i0j0-gdj0i0)*gdi1j1)
-+1*(+(delta_k0k1-gdk0k1)*(delta_i0i1-gui0i1)*(delta_j0j1-guj1j0)+(delta_k0k1-gdk0k1)*(delta_i1j1-guj1i1)*gui0j0)
-+1*(+(delta_j1k1-gdj1k1)*gdk0j0*(delta_i0i1-gui0i1)+(delta_k0k1-gdk0k1)*(delta_i0i1-gui0i1)*(delta_j0j1-gdj1j0))
--1*(+(delta_k0k1-gdk0k1)*(delta_i0i1-gui0i1)*(delta_j0j1-guj0j1)+(delta_k0k1-gdk0k1)*(delta_i1j0-guj0i1)*gui0j1)
--1*(+(delta_j0k1-gdj0k1)*gdk0j1*(delta_i0i1-gui0i1)+(delta_k0k1-gdk0k1)*(delta_i0i1-gui0i1)*(delta_j0j1-gdj0j1))
-+1*(+(delta_i0k1-gdi0k1)*gdk0i1*(delta_j0j1-guj1j0)+(delta_k0k1-gdk0k1)*(delta_i0i1-gdi0i1)*(delta_j0j1-guj1j0))
-+1*(+(delta_i0k1-gdi0k1)*gdk0i1*(delta_j0j1-gdj1j0)-(delta_i0k1-gdi0k1)*gdk0j0*(delta_i1j1-gdj1i1)+(delta_j1k1-gdj1k1)*gdk0i1*gdi0j0+(delta_j1k1-gdj1k1)*gdk0j0*(delta_i0i1-gdi0i1)+(delta_k0k1-gdk0k1)*(delta_i0i1-gdi0i1)*(delta_j0j1-gdj1j0)+(delta_k0k1-gdk0k1)*(delta_i1j1-gdj1i1)*gdi0j0)
--1*(+(delta_i0k1-gdi0k1)*gdk0i1*(delta_j0j1-guj0j1)+(delta_k0k1-gdk0k1)*(delta_i0i1-gdi0i1)*(delta_j0j1-guj0j1))
--1*(+(delta_i0k1-gdi0k1)*gdk0i1*(delta_j0j1-gdj0j1)-(delta_i0k1-gdi0k1)*gdk0j1*(delta_i1j0-gdj0i1)+(delta_j0k1-gdj0k1)*gdk0i1*gdi0j1+(delta_j0k1-gdj0k1)*gdk0j1*(delta_i0i1-gdi0i1)+(delta_k0k1-gdk0k1)*(delta_i0i1-gdi0i1)*(delta_j0j1-gdj0j1)+(delta_k0k1-gdk0k1)*(delta_i1j0-gdj0i1)*gdi0j1);
++1*(+(delta_i1k0-gui1k0)*guk1i0*(-guj1j0)-(delta_i1k0-gui1k0)*guk1j0*(delta_i0j1-guj1i0)+(delta_j1k0-guj1k0)*guk1i0*gui1j0+(delta_j1k0-guj1k0)*guk1j0*(-gui1i0)+(-guk1k0)*(-gui1i0)*(-guj1j0)+(-guk1k0)*(delta_i0j1-guj1i0)*gui1j0)
++1*(+(delta_i1k0-gui1k0)*guk1i0*(-gdj1j0)+(-guk1k0)*(-gui1i0)*(-gdj1j0))
+-1*(+(delta_i1k0-gui1k0)*guk1i0*(-guj0j1)-(delta_i1k0-gui1k0)*guk1j1*(delta_i0j0-guj0i0)+(delta_j0k0-guj0k0)*guk1i0*gui1j1+(delta_j0k0-guj0k0)*guk1j1*(-gui1i0)+(-guk1k0)*(-gui1i0)*(-guj0j1)+(-guk1k0)*(delta_i0j0-guj0i0)*gui1j1)
+-1*(+(delta_i1k0-gui1k0)*guk1i0*(-gdj0j1)+(-guk1k0)*(-gui1i0)*(-gdj0j1))
++1*(+(delta_j1k0-guj1k0)*guk1j0*(-gdi1i0)+(-guk1k0)*(-gdi1i0)*(-guj1j0))
++1*(+(-guk1k0)*(-gdi1i0)*(-gdj1j0)+(-guk1k0)*(delta_i0j1-gdj1i0)*gdi1j0)
+-1*(+(delta_j0k0-guj0k0)*guk1j1*(-gdi1i0)+(-guk1k0)*(-gdi1i0)*(-guj0j1))
+-1*(+(-guk1k0)*(-gdi1i0)*(-gdj0j1)+(-guk1k0)*(delta_i0j0-gdj0i0)*gdi1j1)
+-1*(+(delta_i0k0-gui0k0)*guk1i1*(-guj1j0)-(delta_i0k0-gui0k0)*guk1j0*(delta_i1j1-guj1i1)+(delta_j1k0-guj1k0)*guk1i1*gui0j0+(delta_j1k0-guj1k0)*guk1j0*(-gui0i1)+(-guk1k0)*(-gui0i1)*(-guj1j0)+(-guk1k0)*(delta_i1j1-guj1i1)*gui0j0)
+-1*(+(delta_i0k0-gui0k0)*guk1i1*(-gdj1j0)+(-guk1k0)*(-gui0i1)*(-gdj1j0))
++1*(+(delta_i0k0-gui0k0)*guk1i1*(-guj0j1)-(delta_i0k0-gui0k0)*guk1j1*(delta_i1j0-guj0i1)+(delta_j0k0-guj0k0)*guk1i1*gui0j1+(delta_j0k0-guj0k0)*guk1j1*(-gui0i1)+(-guk1k0)*(-gui0i1)*(-guj0j1)+(-guk1k0)*(delta_i1j0-guj0i1)*gui0j1)
++1*(+(delta_i0k0-gui0k0)*guk1i1*(-gdj0j1)+(-guk1k0)*(-gui0i1)*(-gdj0j1))
+-1*(+(delta_j1k0-guj1k0)*guk1j0*(-gdi0i1)+(-guk1k0)*(-gdi0i1)*(-guj1j0))
+-1*(+(-guk1k0)*(-gdi0i1)*(-gdj1j0)+(-guk1k0)*(delta_i1j1-gdj1i1)*gdi0j0)
++1*(+(delta_j0k0-guj0k0)*guk1j1*(-gdi0i1)+(-guk1k0)*(-gdi0i1)*(-guj0j1))
++1*(+(-guk1k0)*(-gdi0i1)*(-gdj0j1)+(-guk1k0)*(delta_i1j0-gdj0i1)*gdi0j1)
++1*(+(-gdk1k0)*(-gui1i0)*(-guj1j0)+(-gdk1k0)*(delta_i0j1-guj1i0)*gui1j0)
++1*(+(delta_j1k0-gdj1k0)*gdk1j0*(-gui1i0)+(-gdk1k0)*(-gui1i0)*(-gdj1j0))
+-1*(+(-gdk1k0)*(-gui1i0)*(-guj0j1)+(-gdk1k0)*(delta_i0j0-guj0i0)*gui1j1)
+-1*(+(delta_j0k0-gdj0k0)*gdk1j1*(-gui1i0)+(-gdk1k0)*(-gui1i0)*(-gdj0j1))
++1*(+(delta_i1k0-gdi1k0)*gdk1i0*(-guj1j0)+(-gdk1k0)*(-gdi1i0)*(-guj1j0))
++1*(+(delta_i1k0-gdi1k0)*gdk1i0*(-gdj1j0)-(delta_i1k0-gdi1k0)*gdk1j0*(delta_i0j1-gdj1i0)+(delta_j1k0-gdj1k0)*gdk1i0*gdi1j0+(delta_j1k0-gdj1k0)*gdk1j0*(-gdi1i0)+(-gdk1k0)*(-gdi1i0)*(-gdj1j0)+(-gdk1k0)*(delta_i0j1-gdj1i0)*gdi1j0)
+-1*(+(delta_i1k0-gdi1k0)*gdk1i0*(-guj0j1)+(-gdk1k0)*(-gdi1i0)*(-guj0j1))
+-1*(+(delta_i1k0-gdi1k0)*gdk1i0*(-gdj0j1)-(delta_i1k0-gdi1k0)*gdk1j1*(delta_i0j0-gdj0i0)+(delta_j0k0-gdj0k0)*gdk1i0*gdi1j1+(delta_j0k0-gdj0k0)*gdk1j1*(-gdi1i0)+(-gdk1k0)*(-gdi1i0)*(-gdj0j1)+(-gdk1k0)*(delta_i0j0-gdj0i0)*gdi1j1)
+-1*(+(-gdk1k0)*(-gui0i1)*(-guj1j0)+(-gdk1k0)*(delta_i1j1-guj1i1)*gui0j0)
+-1*(+(delta_j1k0-gdj1k0)*gdk1j0*(-gui0i1)+(-gdk1k0)*(-gui0i1)*(-gdj1j0))
++1*(+(-gdk1k0)*(-gui0i1)*(-guj0j1)+(-gdk1k0)*(delta_i1j0-guj0i1)*gui0j1)
++1*(+(delta_j0k0-gdj0k0)*gdk1j1*(-gui0i1)+(-gdk1k0)*(-gui0i1)*(-gdj0j1))
+-1*(+(delta_i0k0-gdi0k0)*gdk1i1*(-guj1j0)+(-gdk1k0)*(-gdi0i1)*(-guj1j0))
+-1*(+(delta_i0k0-gdi0k0)*gdk1i1*(-gdj1j0)-(delta_i0k0-gdi0k0)*gdk1j0*(delta_i1j1-gdj1i1)+(delta_j1k0-gdj1k0)*gdk1i1*gdi0j0+(delta_j1k0-gdj1k0)*gdk1j0*(-gdi0i1)+(-gdk1k0)*(-gdi0i1)*(-gdj1j0)+(-gdk1k0)*(delta_i1j1-gdj1i1)*gdi0j0)
++1*(+(delta_i0k0-gdi0k0)*gdk1i1*(-guj0j1)+(-gdk1k0)*(-gdi0i1)*(-guj0j1))
++1*(+(delta_i0k0-gdi0k0)*gdk1i1*(-gdj0j1)-(delta_i0k0-gdi0k0)*gdk1j1*(delta_i1j0-gdj0i1)+(delta_j0k0-gdj0k0)*gdk1i1*gdi0j1+(delta_j0k0-gdj0k0)*gdk1j1*(-gdi0i1)+(-gdk1k0)*(-gdi0i1)*(-gdj0j1)+(-gdk1k0)*(delta_i1j0-gdj0i1)*gdi0j1)
+-1*(+(delta_i1k1-gui1k1)*guk0i0*(-guj1j0)-(delta_i1k1-gui1k1)*guk0j0*(delta_i0j1-guj1i0)+(delta_j1k1-guj1k1)*guk0i0*gui1j0+(delta_j1k1-guj1k1)*guk0j0*(-gui1i0)+(-guk0k1)*(-gui1i0)*(-guj1j0)+(-guk0k1)*(delta_i0j1-guj1i0)*gui1j0)
+-1*(+(delta_i1k1-gui1k1)*guk0i0*(-gdj1j0)+(-guk0k1)*(-gui1i0)*(-gdj1j0))
++1*(+(delta_i1k1-gui1k1)*guk0i0*(-guj0j1)-(delta_i1k1-gui1k1)*guk0j1*(delta_i0j0-guj0i0)+(delta_j0k1-guj0k1)*guk0i0*gui1j1+(delta_j0k1-guj0k1)*guk0j1*(-gui1i0)+(-guk0k1)*(-gui1i0)*(-guj0j1)+(-guk0k1)*(delta_i0j0-guj0i0)*gui1j1)
++1*(+(delta_i1k1-gui1k1)*guk0i0*(-gdj0j1)+(-guk0k1)*(-gui1i0)*(-gdj0j1))
+-1*(+(delta_j1k1-guj1k1)*guk0j0*(-gdi1i0)+(-guk0k1)*(-gdi1i0)*(-guj1j0))
+-1*(+(-guk0k1)*(-gdi1i0)*(-gdj1j0)+(-guk0k1)*(delta_i0j1-gdj1i0)*gdi1j0)
++1*(+(delta_j0k1-guj0k1)*guk0j1*(-gdi1i0)+(-guk0k1)*(-gdi1i0)*(-guj0j1))
++1*(+(-guk0k1)*(-gdi1i0)*(-gdj0j1)+(-guk0k1)*(delta_i0j0-gdj0i0)*gdi1j1)
++1*(+(delta_i0k1-gui0k1)*guk0i1*(-guj1j0)-(delta_i0k1-gui0k1)*guk0j0*(delta_i1j1-guj1i1)+(delta_j1k1-guj1k1)*guk0i1*gui0j0+(delta_j1k1-guj1k1)*guk0j0*(-gui0i1)+(-guk0k1)*(-gui0i1)*(-guj1j0)+(-guk0k1)*(delta_i1j1-guj1i1)*gui0j0)
++1*(+(delta_i0k1-gui0k1)*guk0i1*(-gdj1j0)+(-guk0k1)*(-gui0i1)*(-gdj1j0))
+-1*(+(delta_i0k1-gui0k1)*guk0i1*(-guj0j1)-(delta_i0k1-gui0k1)*guk0j1*(delta_i1j0-guj0i1)+(delta_j0k1-guj0k1)*guk0i1*gui0j1+(delta_j0k1-guj0k1)*guk0j1*(-gui0i1)+(-guk0k1)*(-gui0i1)*(-guj0j1)+(-guk0k1)*(delta_i1j0-guj0i1)*gui0j1)
+-1*(+(delta_i0k1-gui0k1)*guk0i1*(-gdj0j1)+(-guk0k1)*(-gui0i1)*(-gdj0j1))
++1*(+(delta_j1k1-guj1k1)*guk0j0*(-gdi0i1)+(-guk0k1)*(-gdi0i1)*(-guj1j0))
++1*(+(-guk0k1)*(-gdi0i1)*(-gdj1j0)+(-guk0k1)*(delta_i1j1-gdj1i1)*gdi0j0)
+-1*(+(delta_j0k1-guj0k1)*guk0j1*(-gdi0i1)+(-guk0k1)*(-gdi0i1)*(-guj0j1))
+-1*(+(-guk0k1)*(-gdi0i1)*(-gdj0j1)+(-guk0k1)*(delta_i1j0-gdj0i1)*gdi0j1)
+-1*(+(-gdk0k1)*(-gui1i0)*(-guj1j0)+(-gdk0k1)*(delta_i0j1-guj1i0)*gui1j0)
+-1*(+(delta_j1k1-gdj1k1)*gdk0j0*(-gui1i0)+(-gdk0k1)*(-gui1i0)*(-gdj1j0))
++1*(+(-gdk0k1)*(-gui1i0)*(-guj0j1)+(-gdk0k1)*(delta_i0j0-guj0i0)*gui1j1)
++1*(+(delta_j0k1-gdj0k1)*gdk0j1*(-gui1i0)+(-gdk0k1)*(-gui1i0)*(-gdj0j1))
+-1*(+(delta_i1k1-gdi1k1)*gdk0i0*(-guj1j0)+(-gdk0k1)*(-gdi1i0)*(-guj1j0))
+-1*(+(delta_i1k1-gdi1k1)*gdk0i0*(-gdj1j0)-(delta_i1k1-gdi1k1)*gdk0j0*(delta_i0j1-gdj1i0)+(delta_j1k1-gdj1k1)*gdk0i0*gdi1j0+(delta_j1k1-gdj1k1)*gdk0j0*(-gdi1i0)+(-gdk0k1)*(-gdi1i0)*(-gdj1j0)+(-gdk0k1)*(delta_i0j1-gdj1i0)*gdi1j0)
++1*(+(delta_i1k1-gdi1k1)*gdk0i0*(-guj0j1)+(-gdk0k1)*(-gdi1i0)*(-guj0j1))
++1*(+(delta_i1k1-gdi1k1)*gdk0i0*(-gdj0j1)-(delta_i1k1-gdi1k1)*gdk0j1*(delta_i0j0-gdj0i0)+(delta_j0k1-gdj0k1)*gdk0i0*gdi1j1+(delta_j0k1-gdj0k1)*gdk0j1*(-gdi1i0)+(-gdk0k1)*(-gdi1i0)*(-gdj0j1)+(-gdk0k1)*(delta_i0j0-gdj0i0)*gdi1j1)
++1*(+(-gdk0k1)*(-gui0i1)*(-guj1j0)+(-gdk0k1)*(delta_i1j1-guj1i1)*gui0j0)
++1*(+(delta_j1k1-gdj1k1)*gdk0j0*(-gui0i1)+(-gdk0k1)*(-gui0i1)*(-gdj1j0))
+-1*(+(-gdk0k1)*(-gui0i1)*(-guj0j1)+(-gdk0k1)*(delta_i1j0-guj0i1)*gui0j1)
+-1*(+(delta_j0k1-gdj0k1)*gdk0j1*(-gui0i1)+(-gdk0k1)*(-gui0i1)*(-gdj0j1))
++1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-guj1j0)+(-gdk0k1)*(-gdi0i1)*(-guj1j0))
++1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-gdj1j0)-(delta_i0k1-gdi0k1)*gdk0j0*(delta_i1j1-gdj1i1)+(delta_j1k1-gdj1k1)*gdk0i1*gdi0j0+(delta_j1k1-gdj1k1)*gdk0j0*(-gdi0i1)+(-gdk0k1)*(-gdi0i1)*(-gdj1j0)+(-gdk0k1)*(delta_i1j1-gdj1i1)*gdi0j0)
+-1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-guj0j1)+(-gdk0k1)*(-gdi0i1)*(-guj0j1))
+-1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-gdj0j1)-(delta_i0k1-gdi0k1)*gdk0j1*(delta_i1j0-gdj0i1)+(delta_j0k1-gdj0k1)*gdk0i1*gdi0j1+(delta_j0k1-gdj0k1)*gdk0j1*(-gdi0i1)+(-gdk0k1)*(-gdi0i1)*(-gdj0j1)+(-gdk0k1)*(delta_i1j0-gdj0i1)*gdi0j1)	
+;
         m->jjj[bbb1 + num_bbb*(t+dt)] += pre*meas;
         m->jjj[bbb2 + num_bbb*t] += pre*meas;
         }
