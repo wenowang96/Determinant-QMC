@@ -672,6 +672,7 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 -1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-gdj0j1)-(delta_i0k1-gdi0k1)*gdk0j1*(delta_i1j0-gdj0i1)+(delta_j0k1-gdj0k1)*gdk0i1*gdi0j1+(delta_j0k1-gdj0k1)*gdk0j1*(-gdi0i1)+(-gdk0k1)*(-gdi0i1)*(-gdj0j1)+(-gdk0k1)*(delta_i1j0-gdj0i1)*gdi0j1)	
 ;
         m->jjj[bbb1 + num_bbb*(t+dt)] += pre1*meas;
+        if (dt!=0)
         m->jjj[bbb2 + num_bbb*t] += pre2*meas;
         }
         }
