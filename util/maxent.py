@@ -223,7 +223,3 @@ def kernel_b(beta, tau, w, sym=True):
                 / (1. - np.exp(-beta*w))
     else:
         return w*np.exp(-tau[:, None]*w)/(1. - np.exp(-beta*w))
-    
-def kernel_oddb(beta, tau, w):
-    """odd bosonic kernel: K(tau, w) = exp(-tau*w)/(1-exp(-beta*w))"""
-    return w*np.exp(-tau[:, None]*w)/(1. - np.exp(-beta*w))
