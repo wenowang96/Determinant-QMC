@@ -227,3 +227,7 @@ def kernel_b(beta, tau, w, sym=True):
 def kernel_original(beta, tau, w):
      """original kernel: K(tau, w) = exp(-tau*w)/(1-exp(-beta*w))"""
      return np.exp(-tau[:, None]*w)/(1. - np.exp(-beta*w))
+
+def kernel_w2(beta, tau, w):
+     """original kernel: K(tau, w) = exp(-tau*w)/(1-exp(-beta*w))"""
+     return w*w*np.exp(-tau[:, None]*w)/(1. - np.exp(-beta*w))
