@@ -478,8 +478,8 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
         // delta functions here.
 	if (meas_3curr)
 	#pragma omp parallel for
-	const double factor = 1;
 	for (int t = 0; t < L; t++) {
+		const double factor = 1;
                 const int delta_t = (t == 0);
 		const double *const restrict Gu0t_t = Gu0t + N*N*t;
 		const double *const restrict Gutt_t = Gutt + N*N*t;
