@@ -478,6 +478,7 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
         // delta functions here.
 	if (meas_3curr)
 	#pragma omp parallel for
+	const double factor = 1;
 	for (int t = 0; t < L; t++) {
                 const int delta_t = (t == 0);
 		const double *const restrict Gu0t_t = Gu0t + N*N*t;
@@ -513,8 +514,10 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
                 
 		const int bbb1 = p->map_bbb[b2 + b1*num_b + c*num_b*num_b];
                 const int bbb2 = p->map_bbb[b1 + b2*num_b + c*num_b*num_b];
+		const int bbb3 = p->map_bbb[b2 + c*num_b + b1*num_b*num_b];
 		const double pre1 = (double)sign / p->degen_bbb[bbb1];
                 const double pre2 = (double)sign / p->degen_bbb[bbb2];
+		const double pre3 = (double)sign / p->degen_bbb[bbb3];
 		const int delta_i0k0 = (i0 == k0)*delta_dt;
 		const int delta_i1k0 = (i1 == k0)*delta_dt;
 		const int delta_i0k1 = (i0 == k1)*delta_dt;
@@ -671,9 +674,13 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 -1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-guj0j1)+(-gdk0k1)*(-gdi0i1)*(-guj0j1))
 -1*(+(delta_i0k1-gdi0k1)*gdk0i1*(-gdj0j1)-(delta_i0k1-gdi0k1)*gdk0j1*(delta_i1j0-gdj0i1)+(delta_j0k1-gdj0k1)*gdk0i1*gdi0j1+(delta_j0k1-gdj0k1)*gdk0j1*(-gdi0i1)+(-gdk0k1)*(-gdi0i1)*(-gdj0j1)+(-gdk0k1)*(delta_i1j0-gdj0i1)*gdi0j1)	
 ;
-        m->jjj[bbb1 + num_bbb*(t+dt)] += pre1*meas;
+	if(t==0){factor = 0.5;}
+        if(t!=0){factor = 1;}
+        m->jjj[bbb1 + num_bbb*(t+dt)] += pre1*meas*factor;
         if (dt!=0)
         m->jjj[bbb2 + num_bbb*t] += pre2*meas;
+	if (t==0)
+	m->jjj[bbb3 + num_bbb*(t+dt)] += pre3*meas*0.5;
         }
         }
 	}
