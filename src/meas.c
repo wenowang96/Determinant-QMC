@@ -241,7 +241,7 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 	// minor optimization: handle t = 0 separately, since there are no delta
 	// functions for t > 0. not really needed in 2-site measurements above
 	// as those are fast anyway
-	if (meas_bond_corr)
+	if (meas_bond_corr || meas_thermal)
 	for (int c = 0; c < num_b; c++) {
 		const int j0 = p->bonds[c];
 		const int j1 = p->bonds[c + num_b];
@@ -278,6 +278,8 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const double gdj1i1 = Gd00[j1 + i1*N];
 		const double gdj1j0 = Gd00[j1 + j0*N];
 		const double gdj0j1 = Gd00[j0 + j1*N];
+                
+                if (meas_bond_corr){
 		m->pair_bb[bb] += 0.5*pre*(gui0j0*gdi1j1 + gui1j0*gdi0j1 + gui0j1*gdi1j0 + gui1j1*gdi0j0);
 		const double x = ((delta_i0j1 - guj1i0)*gui1j0 + (delta_i1j0 - guj0i1)*gui0j1
 				+ (delta_i0j1 - gdj1i0)*gdi1j0 + (delta_i1j0 - gdj0i1)*gdi0j1);
@@ -287,48 +289,15 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		m->jsjs[bb] += pre*((gui0i1 - gui1i0 - gdi0i1 + gdi1i0)*(guj0j1 - guj1j0 - gdj0j1 + gdj1j0) + x - y);
 		m->kk[bb]   += pre*((gui0i1 + gui1i0 + gdi0i1 + gdi1i0)*(guj0j1 + guj1j0 + gdj0j1 + gdj1j0) + x + y);
 		m->ksks[bb] += pre*((gui0i1 + gui1i0 - gdi0i1 - gdi1i0)*(guj0j1 + guj1j0 - gdj0j1 - gdj1j0) + x + y);
-	}
-	}
-	
-	if (meas_thermal)
-	for (int c = 0; c < num_b; c++) {
-		const int j0 = p->bonds[c];
-		const int j1 = p->bonds[c + num_b];
-	for (int b = 0; b < num_b; b++) {
-		const int i0 = p->bonds[b];
-		const int i1 = p->bonds[b + num_b];
-		const int bb = p->map_bb[b + c*num_b];
-		const double pre = (double)sign / p->degen_bb[bb];
-		const int delta_i0j0 = (i0 == j0);
-		const int delta_i1j0 = (i1 == j0);
-		const int delta_i0j1 = (i0 == j1);
-		const int delta_i1j1 = (i1 == j1);
-		const double gui1i0 = Gu00[i1 + i0*N];
-		const double gui0i1 = Gu00[i0 + i1*N];
-		const double gui0j0 = Gu00[i0 + j0*N];
-		const double gui1j0 = Gu00[i1 + j0*N];
-		const double gui0j1 = Gu00[i0 + j1*N];
-		const double gui1j1 = Gu00[i1 + j1*N];
-		const double guj0i0 = Gu00[j0 + i0*N];
-		const double guj1i0 = Gu00[j1 + i0*N];
-		const double guj0i1 = Gu00[j0 + i1*N];
-		const double guj1i1 = Gu00[j1 + i1*N];
-		const double guj1j0 = Gu00[j1 + j0*N];
-		const double guj0j1 = Gu00[j0 + j1*N];
-		const double gdi1i0 = Gd00[i1 + i0*N];
-		const double gdi0i1 = Gd00[i0 + i1*N];
-		const double gdi0j0 = Gd00[i0 + j0*N];
-		const double gdi1j0 = Gd00[i1 + j0*N];
-		const double gdi0j1 = Gd00[i0 + j1*N];
-		const double gdi1j1 = Gd00[i1 + j1*N];
-		const double gdj0i0 = Gd00[j0 + i0*N];
-		const double gdj1i0 = Gd00[j1 + i0*N];
-		const double gdj0i1 = Gd00[j0 + i1*N];
-		const double gdj1i1 = Gd00[j1 + i1*N];
-		const double gdj1j0 = Gd00[j1 + j0*N];
-		const double gdj0j1 = Gd00[j0 + j1*N];
-		
-		double part1u = (2-guj0j0-guj1j1)*((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0+(delta_i1j0-gdj0i1)*gdi0j1
+                }
+                
+                if (meas_thermal){
+                const double gui0i0 = Gu00[i0 + i0*N];
+                const double gui1i1 = Gu00[i1 + i1*N];
+                const double guj0j0 = Gu00[j0 + j0*N];
+                const double guj1j1 = Gu00[j1 + j1*N];
+                        
+                double part1u = (2-guj0j0-guj1j1)*((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0+(delta_i1j0-gdj0i1)*gdi0j1
                                       +(gdj1j0-gdj0j1)*(gdi1i0-gdi0i1));
     
                 double part2u = -(gdj1j0-gdj0j1)*(gui1j0*(delta_i0j0-guj0i0)-gui0j0*(delta_i1j0-guj0i1)+gui1j1*(delta_i0j1-guj1i0)-(gui0j1*(delta_i1j1-guj1i1))
@@ -342,37 +311,38 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
                 
 		m->jjn[bb]  += pre*(part1u+part1d+part2u+part2d);
                 
-                double part1u = (2-gui0i0-gui1i1)*((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0+(delta_i1j0-gdj0i1)*gdi0j1
+                part1u = (2-gui0i0-gui1i1)*((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0+(delta_i1j0-gdj0i1)*gdi0j1
                                       +(gdi1i0-gdi0i1)*(gdj1j0-gdj0j1));
     
-                double part2u = -(gdi1i0-gdi0i1)*(gui1j0*(delta_i1j1-guj1i1)-gui0j1*(delta_i0j0-guj0i0)+gui0j0*(delta_i0j1-guj1i0)-gui1j1*(delta_i1j0-guj0i1)
+                part2u = -(gdi1i0-gdi0i1)*(gui1j0*(delta_i1j1-guj1i1)-gui0j1*(delta_i0j0-guj0i0)+gui0j0*(delta_i0j1-guj1i0)-gui1j1*(delta_i1j0-guj0i1)
                                       +(guj0j1-guj1j0)*(2-gui0i0-gui1i1));
     
-                double part1d = (2-gdi0i0-gdi1i1)*((delta_i0j1-guj1i0)*gui1j0-(delta_i0j0-guj0i0)*gui1j1-(delta_i1j1-guj1i1)*gui0j0+(delta_i1j0-guj0i1)*gui0j1
+                part1d = (2-gdi0i0-gdi1i1)*((delta_i0j1-guj1i0)*gui1j0-(delta_i0j0-guj0i0)*gui1j1-(delta_i1j1-guj1i1)*gui0j0+(delta_i1j0-guj0i1)*gui0j1
                                       +(gui1i0-gui0i1)*(guj1j0-guj0j1));
     
-                double part2d = -(gui1i0-gui0i1)*(gdi1j0*(delta_i1j1-gdj1i1)-gdi0j1*(delta_i0j0-gdj0i0)+gdi0j0*(delta_i0j1-gdj1i0)-gdi1j1*(delta_i1j0-gdj0i1)
+                part2d = -(gui1i0-gui0i1)*(gdi1j0*(delta_i1j1-gdj1i1)-gdi0j1*(delta_i0j0-gdj0i0)+gdi0j0*(delta_i0j1-gdj1i0)-gdi1j1*(delta_i1j0-gdj0i1)
                                       +(gdj0j1-gdj1j0)*(2-gdi0i0-gdi1i1));
                 
 		m->jnj[bb] += pre*(part1u+part1d+part2u+part2d);
                 
-                double part1u = ((delta_i0j1-guj1i0)*gui1j0-(delta_i0j0-guj0i0)*gui1j1-(delta_i1j1-guj1i1)*gui0j0
+                part1u = ((delta_i0j1-guj1i0)*gui1j0-(delta_i0j0-guj0i0)*gui1j1-(delta_i1j1-guj1i1)*gui0j0
                                       +(delta_i1j0-guj0i1)*gui0j1+(guj1j0-guj0j1)*(gui1i0-gui0i1))*((2-gdi0i0-gdi1i1)*(2-gdj0j0-gdj1j1)+gdi0j0*(delta_i0j0-gdj0i0)
                                       +gdi1j0*(delta_i1j0-gdj0i1) +gdi0j1*(delta_i0j1-gdj1i0) +gdi1j1*(delta_i1j1-gdj1i1) );
     
-                double part2u = (gdi1j0*(delta_i1j1-gdj1i1)-gdi0j1*(delta_i0j0-gdj0i0)+gdi0j0*(delta_i0j1-gdj1i0)-gdi1j1*(delta_i1j0-gdj0i1)
+                part2u = (gdi1j0*(delta_i1j1-gdj1i1)-gdi0j1*(delta_i0j0-gdj0i0)+gdi0j0*(delta_i0j1-gdj1i0)-gdi1j1*(delta_i1j0-gdj0i1)
                                       +(gdj0j1-gdj1j0)*(2-gdi0i0-gdi1i1))*(gui1j0*(delta_i0j0-guj0i0)-gui0j0*(delta_i1j0-guj0i1)
                                       +gui1j1*(delta_i0j1-guj1i0)-(gui0j1*(delta_i1j1-guj1i1))+(gui0i1-gui1i0)*(2-guj0j0-guj1j1));
     
-                double part1d = ((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0
+                part1d = ((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0
                                       +(delta_i1j0-gdj0i1)*gdi0j1+(gdj1j0-gdj0j1)*(gdi1i0-gdi0i1))*((2-gui0i0-gui1i1)*(2-guj0j0-guj1j1)+gui0j0*(delta_i0j0-guj0i0)
                                       +gui1j0*(delta_i1j0-guj0i1) +gui0j1*(delta_i0j1-guj1i0) +gui1j1*(delta_i1j1-guj1i1) );
     
-                double part2d = (gui1j0*(delta_i1j1-guj1i1)-gui0j1*(delta_i0j0-guj0i0)+gui0j0*(delta_i0j1-guj1i0)-gui1j1*(delta_i1j0-guj0i1)
+                part2d = (gui1j0*(delta_i1j1-guj1i1)-gui0j1*(delta_i0j0-guj0i0)+gui0j0*(delta_i0j1-guj1i0)-gui1j1*(delta_i1j0-guj0i1)
                                       +(guj0j1-guj1j0)*(2-gui0i0-gui1i1))*(gdi1j0*(delta_i0j0-gdj0i0)-gdi0j0*(delta_i1j0-gdj0i1)
                                       +gdi1j1*(delta_i0j1-gdj1i0)-(gdi0j1*(delta_i1j1-gdj1i1))+(gdi0i1-gdi1i0)*(2-gdj0j0-gdj1j1));
                 
 		m->jnjn[bb]   += pre*(part1u+part1d+part2u+part2d);
+                }
 	}
 	}
 
@@ -500,7 +470,7 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 	}
 
 	// no delta functions here.
-	if (meas_bond_corr)
+	if (meas_bond_corr || meas_thermal)
 	#pragma omp parallel for
 	for (int t = 1; t < L; t++) {
 		const double *const restrict Gu0t_t = Gu0t + N*N*t;
@@ -549,6 +519,7 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const double gdj1j0 = Gd00[j1 + j0*N];
 		const double gdj0j1 = Gd00[j0 + j1*N];
 		const double gdj1j1 = Gd00[j1 + j1*N];
+                if (meas_bond_corr){
 		m->pair_bb[bb + num_bb*t] += 0.5*pre*(gui0j0*gdi1j1 + gui1j0*gdi0j1 + gui0j1*gdi1j0 + gui1j1*gdi0j0);
 		const double x = -guj1i0*gui1j0 - guj0i1*gui0j1 - gdj1i0*gdi1j0 - gdj0i1*gdi0j1;
 		const double y = -guj0i0*gui1j1 - guj1i1*gui0j0 - gdj0i0*gdi1j1 - gdj1i1*gdi0j0;
@@ -556,62 +527,9 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		m->jsjs[bb + num_bb*t] += pre*((gui0i1 - gui1i0 - gdi0i1 + gdi1i0)*(guj0j1 - guj1j0 - gdj0j1 + gdj1j0) + x - y);
 		m->kk[bb + num_bb*t]   += pre*((gui0i1 + gui1i0 + gdi0i1 + gdi1i0)*(guj0j1 + guj1j0 + gdj0j1 + gdj1j0) + x + y);
 		m->ksks[bb + num_bb*t] += pre*((gui0i1 + gui1i0 - gdi0i1 - gdi1i0)*(guj0j1 + guj1j0 - gdj0j1 - gdj1j0) + x + y);
-	}
-	}
-	}
-        
-        // no delta functions here.
-	if (meas_thermal)
-	#pragma omp parallel for
-	for (int t = 1; t < L; t++) {
-		const double *const restrict Gu0t_t = Gu0t + N*N*t;
-		const double *const restrict Gutt_t = Gutt + N*N*t;
-		const double *const restrict Gut0_t = Gut0 + N*N*t;
-		const double *const restrict Gd0t_t = Gd0t + N*N*t;
-		const double *const restrict Gdtt_t = Gdtt + N*N*t;
-		const double *const restrict Gdt0_t = Gdt0 + N*N*t;
-	for (int c = 0; c < num_b; c++) {
-		const int j0 = p->bonds[c];
-		const int j1 = p->bonds[c + num_b];
-	for (int b = 0; b < num_b; b++) {
-		const int i0 = p->bonds[b];
-		const int i1 = p->bonds[b + num_b];
-		const int bb = p->map_bb[b + c*num_b];
-		const double pre = (double)sign / p->degen_bb[bb];
-		const double gui0i0 = Gutt_t[i0 + i0*N];
-		const double gui1i0 = Gutt_t[i1 + i0*N];
-		const double gui0i1 = Gutt_t[i0 + i1*N];
-		const double gui1i1 = Gutt_t[i1 + i1*N];
-		const double gui0j0 = Gut0_t[i0 + j0*N];
-		const double gui1j0 = Gut0_t[i1 + j0*N];
-		const double gui0j1 = Gut0_t[i0 + j1*N];
-		const double gui1j1 = Gut0_t[i1 + j1*N];
-		const double guj0i0 = Gu0t_t[j0 + i0*N];
-		const double guj1i0 = Gu0t_t[j1 + i0*N];
-		const double guj0i1 = Gu0t_t[j0 + i1*N];
-		const double guj1i1 = Gu0t_t[j1 + i1*N];
-		const double guj0j0 = Gu00[j0 + j0*N];
-		const double guj1j0 = Gu00[j1 + j0*N];
-		const double guj0j1 = Gu00[j0 + j1*N];
-		const double guj1j1 = Gu00[j1 + j1*N];
-		const double gdi0i0 = Gdtt_t[i0 + i0*N];
-		const double gdi1i0 = Gdtt_t[i1 + i0*N];
-		const double gdi0i1 = Gdtt_t[i0 + i1*N];
-		const double gdi1i1 = Gdtt_t[i1 + i1*N];
-		const double gdi0j0 = Gdt0_t[i0 + j0*N];
-		const double gdi1j0 = Gdt0_t[i1 + j0*N];
-		const double gdi0j1 = Gdt0_t[i0 + j1*N];
-		const double gdi1j1 = Gdt0_t[i1 + j1*N];
-		const double gdj0i0 = Gd0t_t[j0 + i0*N];
-		const double gdj1i0 = Gd0t_t[j1 + i0*N];
-		const double gdj0i1 = Gd0t_t[j0 + i1*N];
-		const double gdj1i1 = Gd0t_t[j1 + i1*N];
-		const double gdj0j0 = Gd00[j0 + j0*N];
-		const double gdj1j0 = Gd00[j1 + j0*N];
-		const double gdj0j1 = Gd00[j0 + j1*N];
-		const double gdj1j1 = Gd00[j1 + j1*N];
-		
-		double part1u = (2-guj0j0-guj1j1)*((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0+(-gdj0i1)*gdi0j1
+                }
+                if (meas_thermal){
+                double part1u = (2-guj0j0-guj1j1)*((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0+(-gdj0i1)*gdi0j1
                                       +(gdj1j0-gdj0j1)*(gdi1i0-gdi0i1));
     
 		double part2u = -(gdj1j0-gdj0j1)*(gui1j0*(-guj0i0)-gui0j0*(-guj0i1)+gui1j1*(-guj1i0)-(gui0j1*(-guj1i1))
@@ -625,37 +543,38 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 
 		m->jjn[bb + num_bb*t]  += pre*(part1u+part1d+part2u+part2d);
                 
- 		double part1u = (2-gui0i0-gui1i1)*((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0+(-gdj0i1)*gdi0j1
+ 		part1u = (2-gui0i0-gui1i1)*((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0+(-gdj0i1)*gdi0j1
                                       +(gdi1i0-gdi0i1)*(gdj1j0-gdj0j1));
     
-		double part2u = -(gdi1i0-gdi0i1)*(gui1j0*(-guj1i1)-gui0j1*(-guj0i0)+gui0j0*(-guj1i0)-gui1j1*(-guj0i1)
+		part2u = -(gdi1i0-gdi0i1)*(gui1j0*(-guj1i1)-gui0j1*(-guj0i0)+gui0j0*(-guj1i0)-gui1j1*(-guj0i1)
                                       +(guj0j1-guj1j0)*(2-gui0i0-gui1i1));
     
-		double part1d = (2-gdi0i0-gdi1i1)*((-guj1i0)*gui1j0-(-guj0i0)*gui1j1-(-guj1i1)*gui0j0+(-guj0i1)*gui0j1
+		part1d = (2-gdi0i0-gdi1i1)*((-guj1i0)*gui1j0-(-guj0i0)*gui1j1-(-guj1i1)*gui0j0+(-guj0i1)*gui0j1
                                       +(gui1i0-gui0i1)*(guj1j0-guj0j1));
     
- 		double part2d = -(gui1i0-gui0i1)*(gdi1j0*(-gdj1i1)-gdi0j1*(-gdj0i0)+gdi0j0*(-gdj1i0)-gdi1j1*(-gdj0i1)
+ 		part2d = -(gui1i0-gui0i1)*(gdi1j0*(-gdj1i1)-gdi0j1*(-gdj0i0)+gdi0j0*(-gdj1i0)-gdi1j1*(-gdj0i1)
                                       +(gdj0j1-gdj1j0)*(2-gdi0i0-gdi1i1));
 
 		m->jnj[bb + num_bb*t] += pre*(part1u+part1d+part2u+part2d);
 		
- 		double part1u = ((-guj1i0)*gui1j0-(-guj0i0)*gui1j1-(-guj1i1)*gui0j0
+ 		part1u = ((-guj1i0)*gui1j0-(-guj0i0)*gui1j1-(-guj1i1)*gui0j0
                                       +(-guj0i1)*gui0j1+(guj1j0-guj0j1)*(gui1i0-gui0i1))*((2-gdi0i0-gdi1i1)*(2-gdj0j0-gdj1j1)+gdi0j0*(-gdj0i0)
                                       +gdi1j0*(-gdj0i1) +gdi0j1*(-gdj1i0) +gdi1j1*(-gdj1i1) );
     
- 		double part2u = (gdi1j0*(-gdj1i1)-gdi0j1*(-gdj0i0)+gdi0j0*(-gdj1i0)-gdi1j1*(-gdj0i1)
+ 		part2u = (gdi1j0*(-gdj1i1)-gdi0j1*(-gdj0i0)+gdi0j0*(-gdj1i0)-gdi1j1*(-gdj0i1)
                                       +(gdj0j1-gdj1j0)*(2-gdi0i0-gdi1i1))*(gui1j0*(-guj0i0)-gui0j0*(-guj0i1)
                                       +gui1j1*(-guj1i0)-(gui0j1*(-guj1i1))+(gui0i1-gui1i0)*(2-guj0j0-guj1j1));
     
- 		double part1d = ((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0
+ 		part1d = ((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0
                                       +(-gdj0i1)*gdi0j1+(gdj1j0-gdj0j1)*(gdi1i0-gdi0i1))*((2-gui0i0-gui1i1)*(2-guj0j0-guj1j1)+gui0j0*(-guj0i0)
                                       +gui1j0*(-guj0i1) +gui0j1*(-guj1i0) +gui1j1*(-guj1i1) );
     
-  		double part2d = (gui1j0*(-guj1i1)-gui0j1*(-guj0i0)+gui0j0*(-guj1i0)-gui1j1*(-guj0i1)
+  		part2d = (gui1j0*(-guj1i1)-gui0j1*(-guj0i0)+gui0j0*(-guj1i0)-gui1j1*(-guj0i1)
                                       +(guj0j1-guj1j0)*(2-gui0i0-gui1i1))*(gdi1j0*(-gdj0i0)-gdi0j0*(-gdj0i1)
                                       +gdi1j1*(-gdj1i0)-(gdi0j1*(-gdj1i1))+(gdi0i1-gdi1i0)*(2-gdj0j0-gdj1j1));
 
                 m->jnjn[bb + num_bb*t]   += pre*(part1u+part1d+part2u+part2d);
+                }
 	}
 	}
 	}
