@@ -30,6 +30,7 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 	my_read(_int, "/params/num_b2b2", &sim->p.num_b2b2);
 	my_read(_int, "/params/period_uneqlt", &sim->p.period_uneqlt);
 	my_read(_int, "/params/meas_bond_corr", &sim->p.meas_bond_corr);
+        my_read(_int, "/params/meas_thermal", &sim->p.meas_thermal);
 	my_read(_int, "/params/meas_2bond_corr", &sim->p.meas_2bond_corr);
 	my_read(_int, "/params/meas_energy_corr", &sim->p.meas_energy_corr);
 	my_read(_int, "/params/meas_nematic_corr", &sim->p.meas_nematic_corr);
@@ -87,6 +88,11 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 			sim->m_ue.kk      = my_calloc(num_bb*L * sizeof(double));
 			sim->m_ue.ksks    = my_calloc(num_bb*L * sizeof(double));
 		}
+                if (sim->p.meas_thermal) {
+                        sim->m_ue.jjn = my_calloc(num_bb*L * sizeof(double));
+                        sim->m_ue.jnj = my_calloc(num_bb*L * sizeof(double));
+                        sim->m_ue.jnjn= my_calloc(num_bb*L * sizeof(double));
+                }
 		if (sim->p.meas_2bond_corr) {
 			sim->m_ue.pair_b2b2= my_calloc(num_b2b2*L * sizeof(double));
 			sim->m_ue.j2j2    = my_calloc(num_b2b2*L * sizeof(double));
@@ -169,6 +175,11 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 			my_read(_double, "/meas_uneqlt/kk",      sim->m_ue.kk);
 			my_read(_double, "/meas_uneqlt/ksks",    sim->m_ue.ksks);
 		}
+                if (sim->p.meas_thermal) {
+                        my_read(_double, "/meas_uneqlt/jjn",     sim->m_ue.jjn);
+                        my_read(_double, "/meas_uneqlt/jnj",     sim->m_ue.jnj);
+                        my_read(_double, "/meas_uneqlt/jnjn",    sim->m_ue.jnjn)
+                }
 		if (sim->p.meas_2bond_corr) {
 			my_read(_double, "/meas_uneqlt/pair_b2b2", sim->m_ue.pair_b2b2);
 			my_read(_double, "/meas_uneqlt/j2j2",      sim->m_ue.j2j2);
@@ -246,6 +257,11 @@ int sim_data_save(const struct sim_data *sim, const char *file)
 			my_write("/meas_uneqlt/kk",      H5T_NATIVE_DOUBLE, sim->m_ue.kk);
 			my_write("/meas_uneqlt/ksks",    H5T_NATIVE_DOUBLE, sim->m_ue.ksks);
 		}
+                if (sim->p.meas_thermal) {
+                        my_write("/meas_uneqlt/jjn",     H5T_NATIVE_DOUBLE, sim->m_ue.jjn);
+                        my_write("/meas_uneqlt/jnj",     H5T_NATIVE_DOUBLE, sim->m_ue.jnj);
+                        my_write("/meas_uneqlt/jnjn",    H5T_NATIVE_DOUBLE, sim->m_ue.jnjn);
+                }
                 if (sim->p.meas_2bond_corr) {
 			my_write("/meas_uneqlt/pair_b2b2", H5T_NATIVE_DOUBLE, sim->m_ue.pair_b2b2);
 			my_write("/meas_uneqlt/j2j2",      H5T_NATIVE_DOUBLE, sim->m_ue.j2j2);
@@ -285,6 +301,11 @@ void sim_data_free(const struct sim_data *sim)
 			my_free(sim->m_ue.kn);
 			my_free(sim->m_ue.kv);
 		}
+                if (sim->p.meas_thermal) {
+                        my_free(sim->m_ue.jnjn);
+                        my_free(sim->m_ue.jnj);
+                        my_free(sim->m_ue.jjn);
+                }
 		if (sim->p.meas_bond_corr) {
 			my_free(sim->m_ue.ksks);
 			my_free(sim->m_ue.kk);
