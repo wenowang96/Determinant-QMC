@@ -296,7 +296,11 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
                 const double gui1i1 = Gu00[i1 + i1*N];
                 const double guj0j0 = Gu00[j0 + j0*N];
                 const double guj1j1 = Gu00[j1 + j1*N];
-                        
+                const double gdi0i0 = Gd00[i0 + i0*N];
+                const double gdi1i1 = Gd00[i1 + i1*N];
+                const double gdj0j0 = Gd00[j0 + j0*N];
+                const double gdj1j1 = Gd00[j1 + j1*N];                
+        
                 double part1u = (2-guj0j0-guj1j1)*((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0+(delta_i1j0-gdj0i1)*gdi0j1
                                       +(gdj1j0-gdj0j1)*(gdi1i0-gdi0i1));
     
