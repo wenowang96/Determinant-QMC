@@ -57,7 +57,7 @@ def create_1(filename=None, overwrite=False, seed=None,
              Nx=16, Ny=4, mu=0.0, tp=0.0, U=6.0, dt=0.115, L=40,
              n_delay=16, n_matmul=8, n_sweep_warm=200, n_sweep_meas=2000,
              period_eqlt=8, period_uneqlt=0,
-             meas_bond_corr=1, meas_2bond_corr=0, meas_energy_corr=0, meas_nematic_corr=0):
+             meas_bond_corr=1, meas_thermal=0, meas_2bond_corr=0, meas_energy_corr=0, meas_nematic_corr=0):
     assert L % n_matmul == 0 and L % period_eqlt == 0
     N = Nx * Ny
 
@@ -272,6 +272,7 @@ def create_1(filename=None, overwrite=False, seed=None,
         f["params"]["period_eqlt"] = np.array(period_eqlt, dtype=np.int32)
         f["params"]["period_uneqlt"] = np.array(period_uneqlt, dtype=np.int32)
         f["params"]["meas_bond_corr"] = meas_bond_corr
+        f["params"]["meas_bond_corr"] = meas_thermal
         f["params"]["meas_2bond_corr"] = meas_2bond_corr
         f["params"]["meas_energy_corr"] = meas_energy_corr
         f["params"]["meas_nematic_corr"] = meas_nematic_corr
@@ -339,6 +340,10 @@ def create_1(filename=None, overwrite=False, seed=None,
                 f["meas_uneqlt"]["jsjs"] = np.zeros(num_bb*L, dtype=np.float64)
                 f["meas_uneqlt"]["kk"] = np.zeros(num_bb*L, dtype=np.float64)
                 f["meas_uneqlt"]["ksks"] = np.zeros(num_bb*L, dtype=np.float64)
+            if meas_thermal:
+                f["meas_uneqlt"]["jjn"] = np.zeros(num_bb*L, dtype=np.float64)
+                f["meas_uneqlt"]["jnj"] = np.zeros(num_bb*L, dtype=np.float64)
+                f["meas_uneqlt"]["jnjn"] = np.zeros(num_bb*L, dtype=np.float64)
             if meas_2bond_corr:
                 f["meas_uneqlt"]["pair_b2b2"] = np.zeros(num_b2b2*L, dtype=np.float64)
                 f["meas_uneqlt"]["j2j2"] = np.zeros(num_b2b2*L, dtype=np.float64)
