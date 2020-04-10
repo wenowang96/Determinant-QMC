@@ -299,51 +299,52 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
                 const double gdi0i0 = Gd00[i0 + i0*N];
                 const double gdi1i1 = Gd00[i1 + i1*N];
                 const double gdj0j0 = Gd00[j0 + j0*N];
-                const double gdj1j1 = Gd00[j1 + j1*N];                
+                const double gdj1j1 = Gd00[j1 + j1*N];      
+                        
+                const double ujinj = (gui1j0*(delta_i0j0-guj0i0)-gui0j0*(delta_i1j0-guj0i1)+gui1j1*(delta_i0j1-guj1i0)-(gui0j1*(delta_i1j1-guj1i1))
+                              +(gui0i1-gui1i0)*(2-guj0j0-guj1j1));
+                const double djinj = (gdi1j0*(delta_i0j0-gdj0i0)-gdi0j0*(delta_i1j0-gdj0i1)+gdi1j1*(delta_i0j1-gdj1i0)-(gdi0j1*(delta_i1j1-gdj1i1))
+                              +(gdi0i1-gdi1i0)*(2-gdj0j0-gdj1j1));
+                const double ujijj = ((delta_i0j1-guj1i0)*gui1j0-(delta_i0j0-guj0i0)*gui1j1-(delta_i1j1-guj1i1)*gui0j0+(delta_i1j0-guj0i1)*gui0j1
+                               +(gui1i0-gui0i1)*(guj1j0-guj0j1));
+                const double djijj = ((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0+(delta_i1j0-gdj0i1)*gdi0j1
+                               +(gdi1i0-gdi0i1)*(gdj1j0-gdj0j1));
+                const double unijj = (gui1j0*(delta_i1j1-guj1i1)-gui0j1*(delta_i0j0-guj0i0)+gui0j0*(delta_i0j1-guj1i0)-gui1j1*(delta_i1j0-guj0i1)
+                              +(guj0j1-guj1j0)*(2-gui0i0-gui1i1));
+                const double dnijj = (gdi1j0*(delta_i1j1-gdj1i1)-gdi0j1*(delta_i0j0-gdj0i0)+gdi0j0*(delta_i0j1-gdj1i0)-gdi1j1*(delta_i1j0-gdj0i1)
+                              +(gdj0j1-gdj1j0)*(2-gdi0i0-gdi1i1));
         
                 double part1u = (2-guj0j0-guj1j1)*((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0+(delta_i1j0-gdj0i1)*gdi0j1
                                       +(gdj1j0-gdj0j1)*(gdi1i0-gdi0i1));
     
-                double part2u = -(gdj1j0-gdj0j1)*(gui1j0*(delta_i0j0-guj0i0)-gui0j0*(delta_i1j0-guj0i1)+gui1j1*(delta_i0j1-guj1i0)-(gui0j1*(delta_i1j1-guj1i1))
-                                      +(gui0i1-gui1i0)*(2-guj0j0-guj1j1));
+                double part2u = -(gdj1j0-gdj0j1)*ujinj;
     
                 double part1d = (2-gdj0j0-gdj1j1)*((delta_i0j1-guj1i0)*gui1j0-(delta_i0j0-guj0i0)*gui1j1-(delta_i1j1-guj1i1)*gui0j0+(delta_i1j0-guj0i1)*gui0j1
                                       +(guj1j0-guj0j1)*(gui1i0-gui0i1));
     
-                double part2d = -(guj1j0-guj0j1)*(gdi1j0*(delta_i0j0-gdj0i0)-gdi0j0*(delta_i1j0-gdj0i1)+gdi1j1*(delta_i0j1-gdj1i0)-(gdi0j1*(delta_i1j1-gdj1i1))
-                                      +(gdi0i1-gdi1i0)*(2-gdj0j0-gdj1j1));
+                double part2d = -(guj1j0-guj0j1)*djinj;
                 
 		m->jjn[bb]  += pre*(part1u+part1d+part2u+part2d);
                 
-                part1u = (2-gui0i0-gui1i1)*((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0+(delta_i1j0-gdj0i1)*gdi0j1
-                                      +(gdi1i0-gdi0i1)*(gdj1j0-gdj0j1));
+                part1u = (2-gui0i0-gui1i1)*djijj;
     
-                part2u = -(gdi1i0-gdi0i1)*(gui1j0*(delta_i1j1-guj1i1)-gui0j1*(delta_i0j0-guj0i0)+gui0j0*(delta_i0j1-guj1i0)-gui1j1*(delta_i1j0-guj0i1)
-                                      +(guj0j1-guj1j0)*(2-gui0i0-gui1i1));
+                part2u = -(gdi1i0-gdi0i1)*unijj;
     
-                part1d = (2-gdi0i0-gdi1i1)*((delta_i0j1-guj1i0)*gui1j0-(delta_i0j0-guj0i0)*gui1j1-(delta_i1j1-guj1i1)*gui0j0+(delta_i1j0-guj0i1)*gui0j1
-                                      +(gui1i0-gui0i1)*(guj1j0-guj0j1));
+                part1d = (2-gdi0i0-gdi1i1)*ujijj;
     
-                part2d = -(gui1i0-gui0i1)*(gdi1j0*(delta_i1j1-gdj1i1)-gdi0j1*(delta_i0j0-gdj0i0)+gdi0j0*(delta_i0j1-gdj1i0)-gdi1j1*(delta_i1j0-gdj0i1)
-                                      +(gdj0j1-gdj1j0)*(2-gdi0i0-gdi1i1));
+                part2d = -(gui1i0-gui0i1)*dnijj;
                 
 		m->jnj[bb] += pre*(part1u+part1d+part2u+part2d);
                 
-                part1u = ((delta_i0j1-guj1i0)*gui1j0-(delta_i0j0-guj0i0)*gui1j1-(delta_i1j1-guj1i1)*gui0j0
-                                      +(delta_i1j0-guj0i1)*gui0j1+(guj1j0-guj0j1)*(gui1i0-gui0i1))*((2-gdi0i0-gdi1i1)*(2-gdj0j0-gdj1j1)+gdi0j0*(delta_i0j0-gdj0i0)
-                                      +gdi1j0*(delta_i1j0-gdj0i1) +gdi0j1*(delta_i0j1-gdj1i0) +gdi1j1*(delta_i1j1-gdj1i1) );
+                part1u = ujijj*((2-gdi0i0-gdi1i1)*(2-gdj0j0-gdj1j1)+gdi0j0*(delta_i0j0-gdj0i0)
+                         +gdi1j0*(delta_i1j0-gdj0i1) +gdi0j1*(delta_i0j1-gdj1i0) +gdi1j1*(delta_i1j1-gdj1i1) );
     
-                part2u = (gdi1j0*(delta_i1j1-gdj1i1)-gdi0j1*(delta_i0j0-gdj0i0)+gdi0j0*(delta_i0j1-gdj1i0)-gdi1j1*(delta_i1j0-gdj0i1)
-                                      +(gdj0j1-gdj1j0)*(2-gdi0i0-gdi1i1))*(gui1j0*(delta_i0j0-guj0i0)-gui0j0*(delta_i1j0-guj0i1)
-                                      +gui1j1*(delta_i0j1-guj1i0)-(gui0j1*(delta_i1j1-guj1i1))+(gui0i1-gui1i0)*(2-guj0j0-guj1j1));
+                part2u = dnijj*ujinj;
     
-                part1d = ((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0
-                                      +(delta_i1j0-gdj0i1)*gdi0j1+(gdj1j0-gdj0j1)*(gdi1i0-gdi0i1))*((2-gui0i0-gui1i1)*(2-guj0j0-guj1j1)+gui0j0*(delta_i0j0-guj0i0)
-                                      +gui1j0*(delta_i1j0-guj0i1) +gui0j1*(delta_i0j1-guj1i0) +gui1j1*(delta_i1j1-guj1i1) );
+                part1d = djijj*((2-gui0i0-gui1i1)*(2-guj0j0-guj1j1)+gui0j0*(delta_i0j0-guj0i0)
+                         +gui1j0*(delta_i1j0-guj0i1) +gui0j1*(delta_i0j1-guj1i0) +gui1j1*(delta_i1j1-guj1i1) );
     
-                part2d = (gui1j0*(delta_i1j1-guj1i1)-gui0j1*(delta_i0j0-guj0i0)+gui0j0*(delta_i0j1-guj1i0)-gui1j1*(delta_i1j0-guj0i1)
-                                      +(guj0j1-guj1j0)*(2-gui0i0-gui1i1))*(gdi1j0*(delta_i0j0-gdj0i0)-gdi0j0*(delta_i1j0-gdj0i1)
-                                      +gdi1j1*(delta_i0j1-gdj1i0)-(gdi0j1*(delta_i1j1-gdj1i1))+(gdi0i1-gdi1i0)*(2-gdj0j0-gdj1j1));
+                part2d = unijj*djinj;
                 
 		m->jnjn[bb]   += pre*(part1u+part1d+part2u+part2d);
                 }
@@ -533,50 +534,52 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		m->ksks[bb + num_bb*t] += pre*((gui0i1 + gui1i0 - gdi0i1 - gdi1i0)*(guj0j1 + guj1j0 - gdj0j1 - gdj1j0) + x + y);
                 }
                 if (meas_thermal){
+                const double ujinj = (gui1j0*(-guj0i0)-gui0j0*(-guj0i1)+gui1j1*(-guj1i0)-(gui0j1*(-guj1i1))
+                              +(gui0i1-gui1i0)*(2-guj0j0-guj1j1));
+                const double djinj = (gdi1j0*(-gdj0i0)-gdi0j0*(-gdj0i1)+gdi1j1*(-gdj1i0)-(gdi0j1*(-gdj1i1))
+                              +(gdi0i1-gdi1i0)*(2-gdj0j0-gdj1j1));
+                const double ujijj = ((-guj1i0)*gui1j0-(-guj0i0)*gui1j1-(-guj1i1)*gui0j0+(-guj0i1)*gui0j1
+                               +(gui1i0-gui0i1)*(guj1j0-guj0j1));
+                const double djijj = ((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0+(-gdj0i1)*gdi0j1
+                               +(gdi1i0-gdi0i1)*(gdj1j0-gdj0j1));
+                const double unijj = (gui1j0*(-guj1i1)-gui0j1*(-guj0i0)+gui0j0*(-guj1i0)-gui1j1*(-guj0i1)
+                              +(guj0j1-guj1j0)*(2-gui0i0-gui1i1));
+                const double dnijj = (gdi1j0*(-gdj1i1)-gdi0j1*(-gdj0i0)+gdi0j0*(-gdj1i0)-gdi1j1*(-gdj0i1)
+                              +(gdj0j1-gdj1j0)*(2-gdi0i0-gdi1i1));
+
+             
                 double part1u = (2-guj0j0-guj1j1)*((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0+(-gdj0i1)*gdi0j1
                                       +(gdj1j0-gdj0j1)*(gdi1i0-gdi0i1));
     
-		double part2u = -(gdj1j0-gdj0j1)*(gui1j0*(-guj0i0)-gui0j0*(-guj0i1)+gui1j1*(-guj1i0)-(gui0j1*(-guj1i1))
-                                      +(gui0i1-gui1i0)*(2-guj0j0-guj1j1));
+		double part2u = -(gdj1j0-gdj0j1)*ujinj;
     
 		double part1d = (2-gdj0j0-gdj1j1)*((-guj1i0)*gui1j0-(-guj0i0)*gui1j1-(-guj1i1)*gui0j0+(-guj0i1)*gui0j1
                                       +(guj1j0-guj0j1)*(gui1i0-gui0i1));
     
- 		double part2d = -(guj1j0-guj0j1)*(gdi1j0*(-gdj0i0)-gdi0j0*(-gdj0i1)+gdi1j1*(-gdj1i0)-(gdi0j1*(-gdj1i1))
-                                      +(gdi0i1-gdi1i0)*(2-gdj0j0-gdj1j1));
+ 		double part2d = -(guj1j0-guj0j1)*djinj;
 
 		m->jjn[bb + num_bb*t]  += pre*(part1u+part1d+part2u+part2d);
                 
- 		part1u = (2-gui0i0-gui1i1)*((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0+(-gdj0i1)*gdi0j1
-                                      +(gdi1i0-gdi0i1)*(gdj1j0-gdj0j1));
+ 		part1u = (2-gui0i0-gui1i1)*djijj;
     
-		part2u = -(gdi1i0-gdi0i1)*(gui1j0*(-guj1i1)-gui0j1*(-guj0i0)+gui0j0*(-guj1i0)-gui1j1*(-guj0i1)
-                                      +(guj0j1-guj1j0)*(2-gui0i0-gui1i1));
+                part2u = -(gdi1i0-gdi0i1)*unijj;
     
-		part1d = (2-gdi0i0-gdi1i1)*((-guj1i0)*gui1j0-(-guj0i0)*gui1j1-(-guj1i1)*gui0j0+(-guj0i1)*gui0j1
-                                      +(gui1i0-gui0i1)*(guj1j0-guj0j1));
+                part1d = (2-gdi0i0-gdi1i1)*ujijj;
     
- 		part2d = -(gui1i0-gui0i1)*(gdi1j0*(-gdj1i1)-gdi0j1*(-gdj0i0)+gdi0j0*(-gdj1i0)-gdi1j1*(-gdj0i1)
-                                      +(gdj0j1-gdj1j0)*(2-gdi0i0-gdi1i1));
+                part2d = -(gui1i0-gui0i1)*dnijj;
 
 		m->jnj[bb + num_bb*t] += pre*(part1u+part1d+part2u+part2d);
 		
- 		part1u = ((-guj1i0)*gui1j0-(-guj0i0)*gui1j1-(-guj1i1)*gui0j0
-                                      +(-guj0i1)*gui0j1+(guj1j0-guj0j1)*(gui1i0-gui0i1))*((2-gdi0i0-gdi1i1)*(2-gdj0j0-gdj1j1)+gdi0j0*(-gdj0i0)
-                                      +gdi1j0*(-gdj0i1) +gdi0j1*(-gdj1i0) +gdi1j1*(-gdj1i1) );
+ 		part1u = ujijj*((2-gdi0i0-gdi1i1)*(2-gdj0j0-gdj1j1)+gdi0j0*(-gdj0i0)
+                         +gdi1j0*(-gdj0i1) +gdi0j1*(-gdj1i0) +gdi1j1*(-gdj1i1) );
     
- 		part2u = (gdi1j0*(-gdj1i1)-gdi0j1*(-gdj0i0)+gdi0j0*(-gdj1i0)-gdi1j1*(-gdj0i1)
-                                      +(gdj0j1-gdj1j0)*(2-gdi0i0-gdi1i1))*(gui1j0*(-guj0i0)-gui0j0*(-guj0i1)
-                                      +gui1j1*(-guj1i0)-(gui0j1*(-guj1i1))+(gui0i1-gui1i0)*(2-guj0j0-guj1j1));
+                part2u = dnijj*ujinj;
     
- 		part1d = ((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0
-                                      +(-gdj0i1)*gdi0j1+(gdj1j0-gdj0j1)*(gdi1i0-gdi0i1))*((2-gui0i0-gui1i1)*(2-guj0j0-guj1j1)+gui0j0*(-guj0i0)
-                                      +gui1j0*(-guj0i1) +gui0j1*(-guj1i0) +gui1j1*(-guj1i1) );
+                part1d = djijj*((2-gui0i0-gui1i1)*(2-guj0j0-guj1j1)+gui0j0*(-guj0i0)
+                         +gui1j0*(-guj0i1) +gui0j1*(-guj1i0) +gui1j1*(-guj1i1) );
     
-  		part2d = (gui1j0*(-guj1i1)-gui0j1*(-guj0i0)+gui0j0*(-guj1i0)-gui1j1*(-guj0i1)
-                                      +(guj0j1-guj1j0)*(2-gui0i0-gui1i1))*(gdi1j0*(-gdj0i0)-gdi0j0*(-gdj0i1)
-                                      +gdi1j1*(-gdj1i0)-(gdi0j1*(-gdj1i1))+(gdi0i1-gdi1i0)*(2-gdj0j0-gdj1j1));
-
+                part2d = unijj*djinj;
+                        
                 m->jnjn[bb + num_bb*t]   += pre*(part1u+part1d+part2u+part2d);
                 }
 	}
