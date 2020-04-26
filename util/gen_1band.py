@@ -519,8 +519,8 @@ def create_1(filename=None, overwrite=False, seed=None,
                 f["meas_uneqlt"]["LLj1LLj1"] = np.zeros(num_bb*L, dtype=np.float64)
                 f["meas_uneqlt"]["LLj1LLj2"] = np.zeros(num_bb*L, dtype=np.float64)
                 f["meas_uneqlt"]["LLj2LLj2"] = np.zeros(num_bb*L, dtype=np.float64)
-                f["meas_uneqlt"]["LLj1j2"] = np.zeros(num_bb2*L, dtype=np.float64)
-                f["meas_uneqlt"]["LLj2j2"] = np.zeros(num_bb2*L, dtype=np.float64)
+                f["meas_uneqlt"]["LLj1j2"] = np.zeros(num_b2b*L, dtype=np.float64)
+                f["meas_uneqlt"]["LLj2j2"] = np.zeros(num_b2b*L, dtype=np.float64)
     return filename
 
 
