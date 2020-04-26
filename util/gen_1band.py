@@ -108,7 +108,121 @@ def create_1(filename=None, overwrite=False, seed=None,
                 bonds[1, i + 2*N] = ix1 + Nx*iy1  # i1 = i + x + y
                 bonds[0, i + 3*N] = ix1 + Nx*iy   # i0 = i + x
                 bonds[1, i + 3*N] = ix + Nx*iy1   # i1 = i + y
-
+    
+    # bond_withsites definitions
+    bps = 4 if tp != 0.0 else 2  # bonds per site
+    num_b = bps*N      # total bonds in cluster
+    bondws = np.zeros((bps+(4*bps-2), num_b), dtype=np.int32)
+    for iy in range(Ny):
+        for ix in range(Nx):
+            i = ix + Nx*iy
+            iy1 = (iy + 1) % Ny
+            ix1 = (ix + 1) % Nx
+            iy2 = (iy + 2) % Ny
+            ix2 = (ix + 2) % Nx
+            iy_1 = (iy - 1) % Ny
+            ix_1 = (ix - 1) % Nx
+            iy_2 = (iy - 2) % Ny
+            ix_2 = (ix - 2) % Nx
+            bondws[0, i] = i            # i0 = i
+            bondws[1, i] = ix1 + Nx*iy  # i1 = i + x
+            
+            bondws[2, i] = ix + Nx*iy1  # i2 = i + y
+            bondws[3, i] = ix + Nx*iy_1 # i2 = i - y
+            bondws[4, i] = ix_1 + Nx*iy # i2 = i - x
+            
+            bondws[5, i] = ix1 + Nx*iy_1# i3 = i + x - y
+            bondws[6, i] = ix1 + Nx*iy1 # i3 = i + x + y
+            bondws[7, i] = ix2 + Nx*iy  # i3 = i + x + x
+            
+            bondws[0, i + N] = i            # i0 = i
+            bondws[1, i + N] = ix + Nx*iy1  # i1 = i + y
+            
+            bondws[2  i + N] = ix1 + Nx*iy  # i2 = i + x
+            bondws[3, i + N] = ix_1 + Nx*iy # i2 = i - x
+            bondws[4, i + N] = ix + Nx*iy_1 # i2 = i - y
+            
+            bondws[5, i + N] = ix_1 + Nx*iy1 # i3 = i + y - x
+            bondws[6, i + N] = ix1 + Nx*iy1# i3 = i + y + x
+            bondws[7, i + N] = ix + Nx*iy2  # i3 = i + y + y
+            if bps == 4:
+                bondws[0, i] = i             # i0 = i
+                bondws[1, i] = ix1 + Nx*iy   # i1 = i + x
+                
+                bondws[2, i] = ix + Nx*iy1   # i2 = i + y
+                bondws[3, i] = ix + Nx*iy_1  # i2 = i - y
+                bondws[4, i] = ix_1 + Nx*iy  # i2 = i - x
+                bondws[5, i] = ix1 + Nx*iy1  # i2 = i + x + y
+                bondws[6, i] = ix1 + Nx*iy_1 # i2 = i + x - y
+                bondws[7, i] = ix_1 + Nx*iy1 # i2 = i - x + y
+                bondws[8, i] = ix_1 + Nx*iy_1# i2 = i - x - y
+                
+                bondws[9, i] = ix1 + Nx*iy_1  # i3 = i + x - y
+                bondws[10, i] = ix1 + Nx*iy1# i3 = i + x + y
+                bondws[11, i] = ix2 + Nx*iy  # i3 = i + x + x
+                bondws[12, i] = ix + Nx*iy_1  # i3 = i + x - x - y
+                bondws[13, i] = ix + Nx*iy1 # i3 = i + x - x + y
+                bondws[14, i] = ix2 + Nx*iy_1 # i3 = i + x + x - y
+                bondws[15, i] = ix2 + Nx*iy1# i3 = i + x + x + y
+                #==================================================
+                bondws[0, i + N] = i            # i0 = i
+                bondws[1, i + N] = ix + Nx*iy1  # i1 = i + y
+                
+                bondws[2, i + N] = ix1 + Nx*iy   # i2 = i + x
+                bondws[3, i + N] = ix_1 + Nx*iy  # i2 = i - x
+                bondws[4, i + N] = ix + Nx*iy_1  # i2 = i - y
+                bondws[5, i + N] = ix1 + Nx*iy1  # i2 = i + x + y
+                bondws[6, i + N] = ix1 + Nx*iy_1 # i2 = i + x - y
+                bondws[7, i + N] = ix_1 + Nx*iy1 # i2 = i - x + y
+                bondws[8, i + N] = ix_1 + Nx*iy_1# i2 = i - x - y
+                
+                bondws[9, i + N] = ix_1 + Nx*iy1  # i3 = i + y - x
+                bondws[10, i + N] = ix1 + Nx*iy1# i3 = i + y + x
+                bondws[11, i + N] = ix + Nx*iy2  # i3 = i + y + y
+                bondws[12, i + N] = ix_1 + Nx*iy # i3 = i + y - x - y
+                bondws[13, i + N] = ix_1 + Nx*iy2  # i3 = i + y - x + y
+                bondws[14, i + N] = ix1 + Nx*iy # i3 = i + y + x - y
+                bondws[15, i + N] = ix1 + Nx*iy2  # i3 = i + y + x + y
+                #==================================================
+                bondws[0, i + 2*N] = i             # i0 = i
+                bondws[1, i + 2*N] = ix1 + Nx*iy1  # i1 = i + x + y
+                
+                bondws[2, i + 2*N] = ix1 + Nx*iy   # i2 = i + x
+                bondws[3, i + 2*N] = ix_1 + Nx*iy  # i2 = i - x
+                bondws[4, i + 2*N] = ix + Nx*iy1  # i2 = i + y
+                bondws[5, i + 2*N] = ix + Nx*iy_1  # i2 = i - y
+                bondws[6, i + 2*N] = ix1 + Nx*iy_1 # i2 = i + x - y
+                bondws[7, i + 2*N] = ix_1 + Nx*iy1 # i2 = i - x + y
+                bondws[8, i + 2*N] = ix_1 + Nx*iy_1# i2 = i - x - y
+                
+                bondws[9, i + 2*N] = ix + Nx*iy1 # i3 = i + x + y - x
+                bondws[10, i + 2*N] = ix2 + Nx*iy1 # i3 = i + x + y + x
+                bondws[11, i + 2*N] = ix1 + Nx*iy # i3 = i + x + y - y
+                bondws[12, i + 2*N] = ix1 + Nx*iy2 # i3 = i + x + y + y
+                bondws[13, i + 2*N] = ix + Nx*iy2# i3 = i + x + y - x + y
+                bondws[14, i + 2*N] = ix2 + Nx*iy # i3 = i + x + y + x - y
+                bondws[15, i + 2*N] = ix2 + Nx*iy2 # i3 = i + x + y + x + y
+                #==================================================
+                bondws[0, i + 3*N] = i   # i0 = i 
+                bondws[1, i + 3*N] = ix_1 + Nx*iy1   # i1 = i - x + y
+                
+                bondws[2, i + 3*N] = ix1 + Nx*iy   # i2 = i + x
+                bondws[3, i + 3*N] = ix_1 + Nx*iy  # i2 = i - x
+                bondws[4, i + 3*N] = ix + Nx*iy1  # i2 = i + y
+                bondws[5, i + 3*N] = ix + Nx*iy_1  # i2 = i - y
+                bondws[6, i + 3*N] = ix1 + Nx*iy1 # i2 = i + x + y
+                bondws[7, i + 3*N] = ix1 + Nx*iy_1 # i2 = i + x - y
+                bondws[8, i + 3*N] = ix_1 + Nx*iy_1# i2 = i - x - y
+                
+                bondws[9, i + 3*N] = ix_2 + Nx*iy1  # i3 = i - x + y - x
+                bondws[10, i + 3*N] = ix + Nx*iy1 # i3 = i - x + y + x
+                bondws[11, i + 3*N] = ix_1 + Nx*iy  # i3 = i - x + y - y
+                bondws[12, i + 3*N] = ix_1 + Nx*iy2  # i3 = i - x + y + y
+                bondws[13, i + 3*N] = ix_2 + Nx*iy # i3 = i - x + y - x - y
+                bondws[14, i + 3*N] = ix_2 + Nx*iy2 # i3 = i - x + y - x + y
+                bondws[15, i + 3*N] = ix + Nx*iy2 # i3 = i - x + y + x + y
+                
+                
     # 1 bond 1 site mapping
     num_bs = bps*N
     map_bs = np.zeros((N, num_b), dtype=np.int32)
@@ -256,6 +370,7 @@ def create_1(filename=None, overwrite=False, seed=None,
         f["params"]["map_i"] = map_i
         f["params"]["map_ij"] = map_ij
         f["params"]["bonds"] = bonds
+        f["params"]["bondws"] = bondws
         f["params"]["bond2s"] = bond2s
         f["params"]["map_bs"] = map_bs
         f["params"]["map_bb"] = map_bb
