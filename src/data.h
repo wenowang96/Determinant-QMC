@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 struct params {
+	int bps;
 	int N, L;
 	int *map_i, *map_ij;
 	int *bonds, *bond2s, *bondws, *map_bs, *map_bb,*map_b2b,*map_bb2, *map_b2b2;
