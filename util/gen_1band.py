@@ -415,6 +415,7 @@ def create_1(filename=None, overwrite=False, seed=None,
         f["params"]["map_bb"] = map_bb
         f["params"]["map_bb2"] = map_bb2
         f["params"]["map_b2b"] = map_b2b
+        f["params"]["bps"] = bps
         f["params"]["map_b2b2"] = map_b2b2
         f["params"]["K"] = K
         f["params"]["U"] = U_i
