@@ -61,7 +61,7 @@ struct meas_uneqlt {
 	double *k2k2, *ks2ks2;
 	double *kv, *kn, *vv, *vn;
 	double *nem_nnnn, *nem_ssss;
-	double *LLj1LLj1, *LLj1LLj2, *LLj2LLj2, *LLj1j2,*LLj2j2;
+        double *LLj1LLj1, *LLj1LLj2, *LLj2LLj2, *LLj1j2,*LLj2j2;
 };
 
 struct sim_data {
