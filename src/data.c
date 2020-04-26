@@ -18,7 +18,7 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 	status = H5LTread_dataset##_type(file_id, (name), __VA_ARGS__); \
 	return_if(status < 0, -1, "H5LTread_dataset() failed for %s: %d\n", (name), status); \
 } while (0);
-
+        my_read(_int, "/params/bps",      &sim->p.bps);
 	my_read(_int, "/params/N",      &sim->p.N);
 	my_read(_int, "/params/L",      &sim->p.L);
 	my_read(_int, "/params/num_i",  &sim->p.num_i);
@@ -27,24 +27,32 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 	my_read(_int, "/params/num_b2", &sim->p.num_b2);
 	my_read(_int, "/params/num_bs", &sim->p.num_bs);
 	my_read(_int, "/params/num_bb", &sim->p.num_bb);
+        my_read(_int, "/params/num_bb2", &sim->p.num_bb2);
+        my_read(_int, "/params/num_b2b", &sim->p.num_b2b);
 	my_read(_int, "/params/num_b2b2", &sim->p.num_b2b2);
 	my_read(_int, "/params/period_uneqlt", &sim->p.period_uneqlt);
 	my_read(_int, "/params/meas_bond_corr", &sim->p.meas_bond_corr);
 	my_read(_int, "/params/meas_2bond_corr", &sim->p.meas_2bond_corr);
 	my_read(_int, "/params/meas_energy_corr", &sim->p.meas_energy_corr);
 	my_read(_int, "/params/meas_nematic_corr", &sim->p.meas_nematic_corr);
+        my_read(_int, "/params/meas_correction", &sim->p.meas_correction);
 
 	const int N = sim->p.N, L = sim->p.L;
 	const int num_i = sim->p.num_i, num_ij = sim->p.num_ij;
 	const int num_b = sim->p.num_b, num_bs = sim->p.num_bs, num_bb = sim->p.num_bb;
-    const int num_b2 = sim->p.num_b2, num_b2b2 = sim->p.num_b2b2;
+        const int num_b2 = sim->p.num_b2, num_b2b2 = sim->p.num_b2b2;
+        const int num_b2b = sim->p.num_b2b, num_bb2 = sim->p.num_bb2;
+        const int bps = sim->p.bps;
 	
 	sim->p.map_i         = my_calloc(N        * sizeof(int));
 	sim->p.map_ij        = my_calloc(N*N      * sizeof(int));
 	sim->p.bonds         = my_calloc(num_b*2  * sizeof(int));
+        sim->p.bondws         = my_calloc(num_b*(bps+(4*bps-2))  * sizeof(int));
 	sim->p.bond2s        = my_calloc(num_b2*2  * sizeof(int));
 	sim->p.map_bs        = my_calloc(num_b*N  * sizeof(int));
 	sim->p.map_bb        = my_calloc(num_b*num_b * sizeof(int));
+        sim->p.map_bb2        = my_calloc(num_b*num_b2 * sizeof(int));
+        sim->p.map_b2b        = my_calloc(num_b*num_b2 * sizeof(int));
 	sim->p.map_b2b2      = my_calloc(num_b2*num_b2 * sizeof(int));
 //	sim->p.K             = my_calloc(N*N      * sizeof(double));
 //	sim->p.U             = my_calloc(num_i    * sizeof(double));
@@ -52,6 +60,8 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 	sim->p.degen_ij      = my_calloc(num_ij   * sizeof(int));
 	sim->p.degen_bs      = my_calloc(num_bs   * sizeof(int));
 	sim->p.degen_bb      = my_calloc(num_bb   * sizeof(int));
+        sim->p.degen_bb2      = my_calloc(num_bb2   * sizeof(int));
+        sim->p.degen_b2b      = my_calloc(num_b2b   * sizeof(int));
 	sim->p.degen_b2b2    = my_calloc(num_b2b2   * sizeof(int));
 	sim->p.exp_K         = my_calloc(N*N      * sizeof(double));
 	sim->p.inv_exp_K     = my_calloc(N*N      * sizeof(double));
@@ -104,6 +114,13 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 			sim->m_ue.nem_nnnn = my_calloc(num_bb*L * sizeof(double));
 			sim->m_ue.nem_ssss = my_calloc(num_bb*L * sizeof(double));
 		}
+                if (sim->p.meas_correction) {
+			sim->m_ue.LLj1LLj1 = my_calloc(num_bb*L * sizeof(double));
+			sim->m_ue.LLj1LLj2 = my_calloc(num_bb*L * sizeof(double));
+                        sim->m_ue.LLj2LLj2 = my_calloc(num_bb*L * sizeof(double));
+                        sim->m_ue.LLj1j2 = my_calloc(num_b2b*L * sizeof(double));
+                        sim->m_ue.LLj2j2 = my_calloc(num_b2b*L * sizeof(double));
+		}
 	}
 	// make sure anything appended here is free'd in sim_data_free()
 
@@ -111,8 +128,11 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 	my_read(_int,    "/params/map_ij",         sim->p.map_ij);
 	my_read(_int,    "/params/bonds",          sim->p.bonds);
 	my_read(_int,    "/params/bond2s",          sim->p.bond2s);
+        my_read(_int,    "/params/bondws",          sim->p.bondws);
 	my_read(_int,    "/params/map_bs",         sim->p.map_bs);
 	my_read(_int,    "/params/map_bb",         sim->p.map_bb);
+        my_read(_int,    "/params/map_bb2",         sim->p.map_bb2);
+        my_read(_int,    "/params/map_b2b",         sim->p.map_b2b);
 	my_read(_int,    "/params/map_b2b2",         sim->p.map_b2b2);
 //	my_read(_double, "/params/K",              sim->p.K);
 //	my_read(_double, "/params/U",              sim->p.U);
@@ -126,6 +146,8 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 	my_read(_int,    "/params/degen_ij",       sim->p.degen_ij);
 	my_read(_int,    "/params/degen_bs",       sim->p.degen_bs);
 	my_read(_int,    "/params/degen_bb",       sim->p.degen_bb);
+        my_read(_int,    "/params/degen_bb2",       sim->p.degen_bb2);
+        my_read(_int,    "/params/degen_b2b",       sim->p.degen_b2b);
 	my_read(_int,    "/params/degen_b2b2",       sim->p.degen_b2b2);
 	my_read(_double, "/params/exp_K",          sim->p.exp_K);
 	my_read(_double, "/params/inv_exp_K",      sim->p.inv_exp_K);
@@ -185,6 +207,13 @@ int sim_data_read_alloc(struct sim_data *sim, const char *file)
 		if (sim->p.meas_nematic_corr) {
 			my_read(_double, "/meas_uneqlt/nem_nnnn", sim->m_ue.nem_nnnn);
 			my_read(_double, "/meas_uneqlt/nem_ssss", sim->m_ue.nem_ssss);
+		}
+                if (sim->p.meas_correction) {
+			my_read(_double, "/meas_uneqlt/LLj1LLj1", sim->m_ue.LLj1LLj1);
+			my_read(_double, "/meas_uneqlt/LLj1LLj2", sim->m_ue.LLj1LLj2);
+                        my_read(_double, "/meas_uneqlt/LLj2LLj2", sim->m_ue.LLj2LLj2);
+                        my_read(_double, "/meas_uneqlt/LLj1j2", sim->m_ue.LLj1j2);
+                        my_read(_double, "/meas_uneqlt/LLj2j2", sim->m_ue.LLj2j2);
 		}
 	}
 
@@ -263,6 +292,13 @@ int sim_data_save(const struct sim_data *sim, const char *file)
 			my_write("/meas_uneqlt/nem_nnnn", H5T_NATIVE_DOUBLE, sim->m_ue.nem_nnnn);
 			my_write("/meas_uneqlt/nem_ssss", H5T_NATIVE_DOUBLE, sim->m_ue.nem_ssss);
 		}
+                if (sim->p.meas_nematic_corr) {
+			my_write("/meas_uneqlt/LLj1LLj1", H5T_NATIVE_DOUBLE, sim->m_ue.LLj1LLj1);
+			my_write("/meas_uneqlt/LLj1LLj2", H5T_NATIVE_DOUBLE, sim->m_ue.LLj1LLj2);
+                        my_write("/meas_uneqlt/LLj2LLj2", H5T_NATIVE_DOUBLE, sim->m_ue.LLj2LLj2);
+                        my_write("/meas_uneqlt/LLj1j2", H5T_NATIVE_DOUBLE, sim->m_ue.LLj1j2);
+                        my_write("/meas_uneqlt/LLj2j2", H5T_NATIVE_DOUBLE, sim->m_ue.LLj2j2);
+		}
 	}
 
 #undef my_write
@@ -299,6 +335,13 @@ void sim_data_free(const struct sim_data *sim)
 			my_free(sim->m_ue.j2j2);
 			my_free(sim->m_ue.pair_b2b2);
 		}
+                if (sim->p.meas_correction) {
+			my_free(sim->m_ue.LLj1LLj1);
+			my_free(sim->m_ue.LLj1LLj2);
+			my_free(sim->m_ue.LLj2LLj2);
+			my_free(sim->m_ue.LLj1j2);
+			my_free(sim->m_ue.LLj2j2);
+		}
 		my_free(sim->m_ue.pair_sw);
 		my_free(sim->m_ue.zz);
 		my_free(sim->m_ue.xx);
@@ -327,6 +370,8 @@ void sim_data_free(const struct sim_data *sim)
 	my_free(sim->p.inv_exp_K);
 	my_free(sim->p.exp_K);
 	my_free(sim->p.degen_b2b2);
+        my_free(sim->p.degen_b2b);
+        my_free(sim->p.degen_bb2);
 	my_free(sim->p.degen_bb);
 	my_free(sim->p.degen_bs);
 	my_free(sim->p.degen_ij);
@@ -334,8 +379,11 @@ void sim_data_free(const struct sim_data *sim)
 //	my_free(sim->p.U);
 //	my_free(sim->p.K);
 	my_free(sim->p.map_b2b2);
+        my_free(sim->p.map_bb2);
+        my_free(sim->p.map_b2b);
 	my_free(sim->p.map_bb);
 	my_free(sim->p.map_bs);
+        my_free(sim->p.bondws);
 	my_free(sim->p.bond2s);
 	my_free(sim->p.bonds);
 	my_free(sim->p.map_ij);
