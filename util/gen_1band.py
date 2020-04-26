@@ -441,6 +441,8 @@ def create_1(filename=None, overwrite=False, seed=None,
         f["params"]["num_b2"] = num_b2
         f["params"]["num_bs"] = num_bs
         f["params"]["num_bb"] = num_bb
+        f["params"]["num_bb2"] = num_bb2
+        f["params"]["num_b2b"] = num_b2b
         f["params"]["num_b2b2"] = num_b2b2
         f["params"]["degen_i"] = degen_i
         f["params"]["degen_ij"] = degen_ij
