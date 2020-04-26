@@ -294,7 +294,7 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 	// minor optimization: handle t = 0 separately, since there are no delta
 	// functions for t > 0. not really needed in 2-site measurements above
 	// as those are fast anyway
-	const BPS = p->bps
+	const int BPS = p->bps;
 	if (meas_correction)
 	for (int c = 0; c < num_b; c++) {
 		const int j0 = p->bondws[c];
@@ -948,10 +948,10 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 			const int delta_i2j3 = (i2 == j3);
 			const int delta_i3j3 = (i3 == j3);
 				
-			const int delta_i0j2 = (i2 == j2);
-			const int delta_i1j2 = (i3 == j2);
-			const int delta_i0j3 = (i2 == j3);
-			const int delta_i1j3 = (i3 == j3);
+			const int delta_i0j2 = (i0 == j2);
+			const int delta_i1j2 = (i1 == j2);
+			const int delta_i0j3 = (i0 == j3);
+			const int delta_i1j3 = (i1 == j3);
 				
                         const double guj2j2 = Gu00[j2 + j2*N];
 			const double guj3j3 = Gu00[j3 + j3*N];
@@ -2112,7 +2112,7 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const double gdj1j1 = Gd00[j1 + j1*N];
 		const double gdi0i0 = Gd00[i0 + i0*N];
 		const double gdi1i1 = Gd00[i1 + i1*N];
-		m->LL2j2[bb] += pre*(
+		m->LLj2j2[bb] += pre*(
                         -2*(+(1.-gui0i0)*(1.-gui1i1)*(-gdi1i0)*(-guj1j0)+(1.-gui0i0)*(delta_i1j1-guj1i1)*gui1j0*(-gdi1i0)+(-gui1i0)*gui0i1*(-gdi1i0)*(-guj1j0)-(-gui1i0)*gui0j0*(delta_i1j1-guj1i1)*(-gdi1i0)+(delta_i0j1-guj1i0)*gui0i1*gui1j0*(-gdi1i0)+(delta_i0j1-guj1i0)*gui0j0*(1.-gui1i1)*(-gdi1i0))
 -2*(+(1.-gui0i0)*(1.-gui1i1)*(-gdi1i0)*(-gdj1j0)+(1.-gui0i0)*(1.-gui1i1)*(delta_i0j1-gdj1i0)*gdi1j0+(-gui1i0)*gui0i1*(-gdi1i0)*(-gdj1j0)+(-gui1i0)*gui0i1*(delta_i0j1-gdj1i0)*gdi1j0)
 +2*(+(1.-gui0i0)*(1.-gui1i1)*(-gdi1i0)*(-guj0j1)+(1.-gui0i0)*(delta_i1j0-guj0i1)*gui1j1*(-gdi1i0)+(-gui1i0)*gui0i1*(-gdi1i0)*(-guj0j1)-(-gui1i0)*gui0j1*(delta_i1j0-guj0i1)*(-gdi1i0)+(delta_i0j0-guj0i0)*gui0i1*gui1j1*(-gdi1i0)+(delta_i0j0-guj0i0)*gui0j1*(1.-gui1i1)*(-gdi1i0))
