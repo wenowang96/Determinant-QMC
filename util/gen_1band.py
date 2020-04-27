@@ -139,7 +139,7 @@ def create_1(filename=None, overwrite=False, seed=None,
             bondws[0, i + N] = i            # i0 = i
             bondws[1, i + N] = ix + Nx*iy1  # i1 = i + y
             
-            bondws[2  i + N] = ix1 + Nx*iy  # i2 = i + x
+            bondws[2,  i + N] = ix1 + Nx*iy  # i2 = i + x
             bondws[3, i + N] = ix_1 + Nx*iy # i2 = i - x
             bondws[4, i + N] = ix + Nx*iy_1 # i2 = i - y
             

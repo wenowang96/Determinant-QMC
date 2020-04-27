@@ -292,7 +292,7 @@ int sim_data_save(const struct sim_data *sim, const char *file)
 			my_write("/meas_uneqlt/nem_nnnn", H5T_NATIVE_DOUBLE, sim->m_ue.nem_nnnn);
 			my_write("/meas_uneqlt/nem_ssss", H5T_NATIVE_DOUBLE, sim->m_ue.nem_ssss);
 		}
-                if (sim->p.meas_nematic_corr) {
+                if (sim->p.meas_correction) {
 			my_write("/meas_uneqlt/LLj1LLj1", H5T_NATIVE_DOUBLE, sim->m_ue.LLj1LLj1);
 			my_write("/meas_uneqlt/LLj1LLj2", H5T_NATIVE_DOUBLE, sim->m_ue.LLj1LLj2);
                         my_write("/meas_uneqlt/LLj2LLj2", H5T_NATIVE_DOUBLE, sim->m_ue.LLj2LLj2);
