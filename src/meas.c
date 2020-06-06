@@ -334,8 +334,8 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const int j0 = p->bonds[c];
 		const int j1 = p->bonds[c + num_b];
 	for (int b = 0; b < num_b2; b++) {
-		const int i0 = p->bonds[b];
-		const int i1 = p->bonds[b + num_b2];
+		const int i0 = p->bond2s[b];
+		const int i1 = p->bond2s[b + num_b2];
 		const int bb2 = p->map_bb2[b + c*num_b2];
 		const double pre = (double)sign / p->degen_bb2[bb2];
 		const int delta_i0j0 = (i0 == j0);
@@ -401,8 +401,8 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 	
 	if (meas_thermal)
         for (int c = 0; c < num_b2; c++) {
-		const int j0 = p->bonds[c];
-		const int j1 = p->bonds[c + num_b2];
+		const int j0 = p->bond2s[c];
+		const int j1 = p->bond2s[c + num_b2];
 	for (int b = 0; b < num_b; b++) {
 		const int i0 = p->bonds[b];
 		const int i1 = p->bonds[b + num_b];
@@ -692,8 +692,8 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const int j0 = p->bonds[c];
 		const int j1 = p->bonds[c + num_b];
 	for (int b = 0; b < num_b2; b++) {
-		const int i0 = p->bonds[b];
-		const int i1 = p->bonds[b + num_b2];
+		const int i0 = p->bond2s[b];
+		const int i1 = p->bond2s[b + num_b2];
 		const int bb2 = p->map_bb2[b + c*num_b2];
 		const double pre = (double)sign / p->degen_bb2[bb2];
 		const double gui0i0 = Gutt_t[i0 + i0*N];
@@ -729,14 +729,14 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const double gdj0j1 = Gd00[j0 + j1*N];
 		const double gdj1j1 = Gd00[j1 + j1*N];
 
+                const double ujinj = (gui1j0*(-guj0i0)-gui0j0*(-guj0i1)+gui1j1*(-guj1i0)-(gui0j1*(-guj1i1))
+                              +(gui0i1-gui1i0)*(2-guj0j0-guj1j1));
+                const double djinj = (gdi1j0*(-gdj0i0)-gdi0j0*(-gdj0i1)+gdi1j1*(-gdj1i0)-(gdi0j1*(-gdj1i1))
+                              +(gdi0i1-gdi1i0)*(2-gdj0j0-gdj1j1));
                 const double ujijj = ((-guj1i0)*gui1j0-(-guj0i0)*gui1j1-(-guj1i1)*gui0j0+(-guj0i1)*gui0j1
                                +(gui1i0-gui0i1)*(guj1j0-guj0j1));
                 const double djijj = ((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0+(-gdj0i1)*gdi0j1
                                +(gdi1i0-gdi0i1)*(gdj1j0-gdj0j1));
-                const double unijj = (gui1j0*(-guj1i1)-gui0j1*(-guj0i0)+gui0j0*(-guj1i0)-gui1j1*(-guj0i1)
-                              +(guj0j1-guj1j0)*(2-gui0i0-gui1i1));
-                const double dnijj = (gdi1j0*(-gdj1i1)-gdi0j1*(-gdj0i0)+gdi0j0*(-gdj1i0)-gdi1j1*(-gdj0i1)
-                              +(gdj0j1-gdj1j0)*(2-gdi0i0-gdi1i1));
 
              
                 double part1u = (2-guj0j0-guj1j1)*((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0+(-gdj0i1)*gdi0j1
@@ -764,8 +764,8 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 		const double *const restrict Gdtt_t = Gdtt + N*N*t;
 		const double *const restrict Gdt0_t = Gdt0 + N*N*t;
 	for (int c = 0; c < num_b2; c++) {
-		const int j0 = p->bonds[c];
-		const int j1 = p->bonds[c + num_b2];
+		const int j0 = p->bond2s[c];
+		const int j1 = p->bond2s[c + num_b2];
 	for (int b = 0; b < num_b; b++) {
 		const int i0 = p->bonds[b];
 		const int i1 = p->bonds[b + num_b];
