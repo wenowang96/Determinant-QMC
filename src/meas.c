@@ -380,10 +380,10 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
                               +(gui0i1-gui1i0)*(2-guj0j0-guj1j1));
                 const double djinj = (gdi1j0*(delta_i0j0-gdj0i0)-gdi0j0*(delta_i1j0-gdj0i1)+gdi1j1*(delta_i0j1-gdj1i0)-(gdi0j1*(delta_i1j1-gdj1i1))
                               +(gdi0i1-gdi1i0)*(2-gdj0j0-gdj1j1));
-                const double ujijj = ((delta_i0j1-guj1i0)*gui1j0-(delta_i0j0-guj0i0)*gui1j1-(delta_i1j1-guj1i1)*gui0j0+(delta_i1j0-guj0i1)*gui0j1
-                               +(gui1i0-gui0i1)*(guj1j0-guj0j1));
-                const double djijj = ((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0+(delta_i1j0-gdj0i1)*gdi0j1
-                               +(gdi1i0-gdi0i1)*(gdj1j0-gdj0j1));
+                // const double ujijj = ((delta_i0j1-guj1i0)*gui1j0-(delta_i0j0-guj0i0)*gui1j1-(delta_i1j1-guj1i1)*gui0j0+(delta_i1j0-guj0i1)*gui0j1
+                //               +(gui1i0-gui0i1)*(guj1j0-guj0j1));
+                // const double djijj = ((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0+(delta_i1j0-gdj0i1)*gdi0j1
+                //               +(gdi1i0-gdi0i1)*(gdj1j0-gdj0j1));
         
                 double part1u = (2-guj0j0-guj1j1)*((delta_i0j1-gdj1i0)*gdi1j0-(delta_i0j0-gdj0i0)*gdi1j1-(delta_i1j1-gdj1i1)*gdi0j0+(delta_i1j0-gdj0i1)*gdi0j1
                                       +(gdj1j0-gdj0j1)*(gdi1i0-gdi0i1));
@@ -733,10 +733,10 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
                               +(gui0i1-gui1i0)*(2-guj0j0-guj1j1));
                 const double djinj = (gdi1j0*(-gdj0i0)-gdi0j0*(-gdj0i1)+gdi1j1*(-gdj1i0)-(gdi0j1*(-gdj1i1))
                               +(gdi0i1-gdi1i0)*(2-gdj0j0-gdj1j1));
-                const double ujijj = ((-guj1i0)*gui1j0-(-guj0i0)*gui1j1-(-guj1i1)*gui0j0+(-guj0i1)*gui0j1
-                               +(gui1i0-gui0i1)*(guj1j0-guj0j1));
-                const double djijj = ((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0+(-gdj0i1)*gdi0j1
-                               +(gdi1i0-gdi0i1)*(gdj1j0-gdj0j1));
+                // const double ujijj = ((-guj1i0)*gui1j0-(-guj0i0)*gui1j1-(-guj1i1)*gui0j0+(-guj0i1)*gui0j1
+                //               +(gui1i0-gui0i1)*(guj1j0-guj0j1));
+                // const double djijj = ((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0+(-gdj0i1)*gdi0j1
+                //               +(gdi1i0-gdi0i1)*(gdj1j0-gdj0j1));
 
              
                 double part1u = (2-guj0j0-guj1j1)*((-gdj1i0)*gdi1j0-(-gdj0i0)*gdi1j1-(-gdj1i1)*gdi0j0+(-gdj0i1)*gdi0j1
