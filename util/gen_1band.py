@@ -267,7 +267,7 @@ def create_1(filename=None, overwrite=False, seed=None,
     exp_lmbd = np.exp(0.5*U_i*dt) + np.sqrt(np.expm1(U_i*dt))
 #    exp_lmbd = np.exp(np.arccosh(np.exp(0.5*U_i*dt)))
 #    exp_lmbd = float(mpm.exp(mpm.acosh(mpm.exp(0.5*float(U*dt)))))
-    exp_lambda = np.array((1.0/exp_lmbd[map_i], exp_lmbd[map_i]))
+    exp_lambda = np.array((exp_lmbd[map_i]**-1, exp_lmbd[map_i]))
     delll = np.array((exp_lmbd[map_i]**2 - 1, exp_lmbd[map_i]**-2 - 1))
 
     if filename is None:
