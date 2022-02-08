@@ -5,7 +5,7 @@
 struct params {
 	int N, L;
 	int *map_i, *map_ij;
-	int *bonds, *bond2s, *map_bs, *map_bb, *map_b2b,*map_bb2, *map_b2b2;
+	int *bonds, *bond2s, *map_bs, *map_bb, *map_b2b, *map_bb2, *map_b2b2;
 //	double *K, *U;
 //	double dt;
 
@@ -57,7 +57,7 @@ struct meas_uneqlt {
 	double *jj, *jsjs;
 	double *kk, *ksks;
 	double *pair_b2b2;
-        double *jjn, *jnj, *jnjn;
+	double *jjn, *jnj, *jnjn;
 	double *j2j2, *js2js2;
 	double *k2k2, *ks2ks2;
 	double *kv, *kn, *vv, *vn;
