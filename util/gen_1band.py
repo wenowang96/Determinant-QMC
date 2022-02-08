@@ -157,31 +157,42 @@ def create_1(filename=None, overwrite=False, seed=None,
             ix1 = (ix + 1) % Nx
             iy2 = (iy + 2) % Ny
             ix2 = (ix + 2) % Nx
-            bond2s[0, i] = i            # i0 = i
-            bond2s[1, i] = ix1 + Nx*iy  # i1 = i + x
-            bond2s[0, i + N] = i            # i0 = i
-            bond2s[1, i + N] = ix + Nx*iy1  # i1 = i + y
-            bond2s[0, i + 2*N] = i             # i0 = i
-            bond2s[1, i + 2*N] = ix1 + Nx*iy1  # i1 = i + x + y
-            bond2s[0, i + 3*N] = ix1 + Nx*iy   # i0 = i + x
-            bond2s[1, i + 3*N] = ix + Nx*iy1   # i1 = i + y
-            bond2s[0, i + 4*N] = i             # i0 = i
-            bond2s[1, i + 4*N] = ix2 + Nx*iy  # i1 = i + 2x
-            bond2s[0, i + 5*N] = i   # i0 = i
-            bond2s[1, i + 5*N] = ix + Nx*iy2  # i1 = i + 2y
+            #t't
+            bond2s[0, i] = i            # i0 = i       - & |\  /| \| |/
+            bond2s[1, i] = ix1 + Nx*iy  # i1 = i + x    
+            bond2s[0, i + N] = i            # i0 = i      | & _\ /_ _  _
+            bond2s[1, i + N] = ix + Nx*iy1  # i1 = i + y            /  \
+            #tt
+            bond2s[0, i + 2*N] = i             # i0 = i          / & _|   _
+            bond2s[1, i + 2*N] = ix1 + Nx*iy1  # i1 = i + x + y          |
+
+            bond2s[0, i + 3*N] = ix1 + Nx*iy   # i0 = i + x   \  & _
+            bond2s[1, i + 3*N] = ix + Nx*iy1   # i1 = i + y         |  |_
+            #tt, t't'
+            bond2s[0, i + 4*N] = i             # i0 = i      -- & /\ \/
+            bond2s[1, i + 4*N] = ix2 + Nx*iy   # i1 = i + 2x
+            #tt
+            bond2s[0, i + 5*N] = i            # i0 = i        | &  /  \
+            bond2s[1, i + 5*N] = ix + Nx*iy2  # i1 = i + 2y   |    \  /
             if b2ps == 12:
-                bond2s[0, i + 6*N] = i   # i0 = i
-                bond2s[1, i + 6*N] = ix2 + Nx*iy1  # i1 = i + 2x + y
-                bond2s[0, i + 7*N] = i   # i0 = i 
-                bond2s[1, i + 7*N] = ix1 + Nx*iy2   # i1 = i + x + 2y
-                bond2s[0, i + 8*N] = i   # i0 = i
-                bond2s[1, i + 8*N] = ix2 + Nx*iy2  # i1 = i + 2x + 2y
-                bond2s[0, i + 9*N] = ix2 + Nx*iy   # i0 = i + 2x
-                bond2s[1, i + 9*N] = ix + Nx*iy1  # i1 = i + y
-                bond2s[0, i + 10*N] = ix1 + Nx*iy   # i0 = i + x
-                bond2s[1, i + 10*N] = ix + Nx*iy2  # i1 = i + 2y
-                bond2s[0, i + 11*N] = ix2 + Nx*iy   # i0 = i + 2x
-                bond2s[1, i + 11*N] = ix + Nx*iy2  # i1 = i + 2y
+                bond2s[0, i + 6*N] = i             # i0 = i               _
+                bond2s[1, i + 6*N] = ix2 + Nx*iy1  # i1 = i + 2x + y  _/ /
+
+                bond2s[0, i + 7*N] = i              # i0 = i            /   |
+                bond2s[1, i + 7*N] = ix1 + Nx*iy2   # i1 = i + x + 2y  |   /
+
+                bond2s[0, i + 8*N] = i             # i0 = i            / 
+                bond2s[1, i + 8*N] = ix2 + Nx*iy2  # i1 = i + 2x + 2y /
+
+                bond2s[0, i + 9*N] = ix2 + Nx*iy   # i0 = i + 2x     _
+                bond2s[1, i + 9*N] = ix + Nx*iy1   # i1 = i + y   \_  \
+
+                bond2s[0, i + 10*N] = ix1 + Nx*iy   # i0 = i + x    \  |
+                bond2s[1, i + 10*N] = ix + Nx*iy2   # i1 = i + 2y    |  \
+
+                bond2s[0, i + 11*N] = ix2 + Nx*iy   # i0 = i + 2x    \
+                bond2s[1, i + 11*N] = ix + Nx*iy2   # i1 = i + 2y     \
+
     # 2 2-bond mapping
     num_b2b2 = b2ps*b2ps*N
     map_b2b2 = np.zeros((num_b2, num_b2), dtype=np.int32)
@@ -220,7 +231,7 @@ def create_1(filename=None, overwrite=False, seed=None,
                             map_bb2[j + N*jj, i + N*ii] = kk
                             degen_bb2[kk] += 1
                             
-    # bond 2-bond mapping
+    # 2-bond bond mapping
     num_b2b = b2ps*bps*N
     map_b2b = np.zeros((num_b2, num_b), dtype=np.int32)
     degen_b2b = np.zeros(num_b2b, dtype = np.int32)
