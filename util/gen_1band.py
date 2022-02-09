@@ -21,7 +21,6 @@ def rand_seed(x):
         rng[i] = z ^ (z >> np.uint64(31))
     return rng
 
-
 # http://xoroshiro.di.unimi.it/xorshift1024star.c
 def rand_uint(rng):
     s0 = rng[rng[16]]
@@ -72,11 +71,12 @@ def create_1(file_sim=None, file_params=None, overwrite=False, seed=None,
     if seed is None:
         seed = int(time.time())
     init_rng = rand_seed(seed)
+    rng = init_rng.copy()
     init_hs = np.zeros((L, N), dtype=np.int32)
 
     for l in range(L):
         for i in range(N):
-            init_hs[l, i] = rand_uint(init_rng) >> np.uint64(63)
+            init_hs[l, i] = rand_uint(rng) >> np.uint64(63)
 
     # 1 site mapping
     map_i = np.zeros(N, dtype=np.int32)
@@ -373,7 +373,7 @@ def create_1(file_sim=None, file_params=None, overwrite=False, seed=None,
         f.create_group("state")
         f["state"]["sweep"] = np.array(0, dtype=np.int32)
         f["state"]["init_rng"] = init_rng # save if need to replicate data
-        f["state"]["rng"] = init_rng
+        f["state"]["rng"] = rng
         f["state"]["hs"] = init_hs
 
         # measurements
@@ -435,7 +435,8 @@ def create_batch(Nfiles=1, prefix=None, seed=None, **kwargs):
         seed = int(time.time())
     if prefix is None:
         prefix = str(seed)
-    rng = rand_seed(seed)
+    init_rng = rand_seed(seed)
+    print(init_rng)
 
     file_0 = "{}_{}.h5".format(prefix, 0)
     file_p = "{}.h5.params".format(prefix)
@@ -446,19 +447,20 @@ def create_batch(Nfiles=1, prefix=None, seed=None, **kwargs):
          L = f["params"]["L"][...]
 
     for i in range(1, Nfiles):
-        rand_jump(rng)
-        init_rng = rng.copy()
+        rand_jump(init_rng)
+        rng = init_rng.copy()
         init_hs = np.zeros((L, N), dtype=np.int32)
 
         for l in range(L):
             for r in range(N):
-                init_hs[l, r] = rand_uint(init_rng) >> np.uint64(63)
+                init_hs[l, r] = rand_uint(rng) >> np.uint64(63)
 
         file_i = "{}_{}.h5".format(prefix, i)
         shutil.copy2(file_0, file_i)
         with h5py.File(file_i, "r+") as f:
+            print(init_rng)
             f["state"]["init_rng"][...] = init_rng
-            f["state"]["rng"][...] = init_rng
+            f["state"]["rng"][...] = rng
             f["state"]["hs"][...] = init_hs
     print("created simulation files:",
           file_0 if Nfiles == 1 else "{} ... {}".format(file_0, file_i))
