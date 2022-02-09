@@ -238,9 +238,12 @@ void measure_uneqlt(const struct params *const restrict p, const int sign,
 	}
 
 	// Below includes:
-	// * 1 bond -- 1 bond correlators: pair_bb, jj, jsjs, kk, ksks (4 fermion)
-	// * thermal cross term correlators: jnjn, jnj, jjn (6 fermion, 8 fermion)
-	// * 2 bond -- 2 bond correlators: pair_b2b2, j2j2, js2js2, k2k2, ks2ks2 (4 fermion)
+	// * 1 bond <-> 1 bond correlators: pair_bb, jj, jsjs, kk, ksks (4 fermion)
+	// * (1 site)1 bond <-> (1 site)1 bond correlator: jnjn (8 fermion)
+	// * (1 site)1 bond <-> 1 bond correlators: jjn, jnj (6 fermion)       => jjn/jnj box
+	// * 2 hop bond <-> (1 site)1 bond correlators: j2jn, jnj2 (6 fermion) => jjn/jnj box
+	// * 2 hop bond <-> 1 bond correlators:j2j, jj2 (4 fermion)  ==> j2j2 box
+	// * 2 hop bond <-> 2 hop bond correlators: j2j2 (4 fermion) ==> j2j2 box
 	// * nematic correlators: nem_nnnn, nem_ssss (? fermions?)
 
 	// minor optimization: handle t = 0 separately, since there are no delta

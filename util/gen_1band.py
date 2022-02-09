@@ -410,11 +410,16 @@ def create_1(file_sim=None, file_params=None, overwrite=False, seed=None,
                 f["meas_uneqlt"]["kk"] = np.zeros(num_bb*L, dtype=np.float64)
                 f["meas_uneqlt"]["ksks"] = np.zeros(num_bb*L, dtype=np.float64)
             if meas_thermal:
+                # "jjn" and "jnj" accumulators includes jxding's
+                # j-jn,j2-jn, jn-j, jn-j2 terms
                 f["meas_uneqlt"]["jjn"] = np.zeros(num_bb2*L, dtype=np.float64)
                 f["meas_uneqlt"]["jnj"] = np.zeros(num_b2b*L, dtype=np.float64)
+                #same as jxding's jnjn terms
                 f["meas_uneqlt"]["jnjn"] = np.zeros(num_bb*L, dtype=np.float64)
             if meas_2bond_corr:
                 f["meas_uneqlt"]["pair_b2b2"] = np.zeros(num_b2b2*L, dtype=np.float64)
+                # "j2j2" accumulator includes jxding's
+                # j2-j2, j2-j, j-j2, jj terms
                 f["meas_uneqlt"]["j2j2"] = np.zeros(num_b2b2*L, dtype=np.float64)
                 f["meas_uneqlt"]["js2js2"] = np.zeros(num_b2b2*L, dtype=np.float64)
                 f["meas_uneqlt"]["k2k2"] = np.zeros(num_b2b2*L, dtype=np.float64)
