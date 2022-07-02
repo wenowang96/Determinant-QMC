@@ -21,7 +21,6 @@ def rand_seed(x):
         rng[i] = z ^ (z >> np.uint64(31))
     return rng
 
-
 # http://xoroshiro.di.unimi.it/xorshift1024star.c
 def rand_uint(rng):
     s0 = rng[rng[16]]
@@ -72,11 +71,12 @@ def create_1(file_sim=None, file_params=None, overwrite=False, seed=None,
     if seed is None:
         seed = int(time.time())
     init_rng = rand_seed(seed)
+    rng = init_rng.copy()
     init_hs = np.zeros((L, N), dtype=np.int32)
 
     for l in range(L):
         for i in range(N):
-            init_hs[l, i] = rand_uint(init_rng) >> np.uint64(63)
+            init_hs[l, i] = rand_uint(rng) >> np.uint64(63)
 
     # 1 site mapping
     map_i = np.zeros(N, dtype=np.int32)
@@ -165,31 +165,42 @@ def create_1(file_sim=None, file_params=None, overwrite=False, seed=None,
             ix1 = (ix + 1) % Nx
             iy2 = (iy + 2) % Ny
             ix2 = (ix + 2) % Nx
-            bond2s[0, i] = i            # i0 = i
-            bond2s[1, i] = ix1 + Nx*iy  # i1 = i + x
-            bond2s[0, i + N] = i            # i0 = i
-            bond2s[1, i + N] = ix + Nx*iy1  # i1 = i + y
-            bond2s[0, i + 2*N] = i             # i0 = i
-            bond2s[1, i + 2*N] = ix1 + Nx*iy1  # i1 = i + x + y
-            bond2s[0, i + 3*N] = ix1 + Nx*iy   # i0 = i + x
-            bond2s[1, i + 3*N] = ix + Nx*iy1   # i1 = i + y
-            bond2s[0, i + 4*N] = i             # i0 = i
-            bond2s[1, i + 4*N] = ix2 + Nx*iy  # i1 = i + 2x
-            bond2s[0, i + 5*N] = i   # i0 = i
-            bond2s[1, i + 5*N] = ix + Nx*iy2  # i1 = i + 2y
+            #t't
+            bond2s[0, i] = i            # i0 = i       - & |\  /| \| |/
+            bond2s[1, i] = ix1 + Nx*iy  # i1 = i + x    
+            bond2s[0, i + N] = i            # i0 = i      | & _\ /_ _  _
+            bond2s[1, i + N] = ix + Nx*iy1  # i1 = i + y            /  \
+            #tt
+            bond2s[0, i + 2*N] = i             # i0 = i          / & _|   _
+            bond2s[1, i + 2*N] = ix1 + Nx*iy1  # i1 = i + x + y          |
+
+            bond2s[0, i + 3*N] = ix1 + Nx*iy   # i0 = i + x   \  & _
+            bond2s[1, i + 3*N] = ix + Nx*iy1   # i1 = i + y         |  |_
+            #tt, t't'
+            bond2s[0, i + 4*N] = i             # i0 = i      -- & /\ \/
+            bond2s[1, i + 4*N] = ix2 + Nx*iy   # i1 = i + 2x
+            #tt
+            bond2s[0, i + 5*N] = i            # i0 = i        | &  /  \
+            bond2s[1, i + 5*N] = ix + Nx*iy2  # i1 = i + 2y   |    \  /
             if b2ps == 12:
-                bond2s[0, i + 6*N] = i   # i0 = i
-                bond2s[1, i + 6*N] = ix2 + Nx*iy1  # i1 = i + 2x + y
-                bond2s[0, i + 7*N] = i   # i0 = i 
-                bond2s[1, i + 7*N] = ix1 + Nx*iy2   # i1 = i + x + 2y
-                bond2s[0, i + 8*N] = i   # i0 = i
-                bond2s[1, i + 8*N] = ix2 + Nx*iy2  # i1 = i + 2x + 2y
-                bond2s[0, i + 9*N] = ix2 + Nx*iy   # i0 = i + 2x
-                bond2s[1, i + 9*N] = ix + Nx*iy1  # i1 = i + y
-                bond2s[0, i + 10*N] = ix1 + Nx*iy   # i0 = i + x
-                bond2s[1, i + 10*N] = ix + Nx*iy2  # i1 = i + 2y
-                bond2s[0, i + 11*N] = ix2 + Nx*iy   # i0 = i + 2x
-                bond2s[1, i + 11*N] = ix + Nx*iy2  # i1 = i + 2y
+                bond2s[0, i + 6*N] = i             # i0 = i               _
+                bond2s[1, i + 6*N] = ix2 + Nx*iy1  # i1 = i + 2x + y  _/ /
+
+                bond2s[0, i + 7*N] = i              # i0 = i            /   |
+                bond2s[1, i + 7*N] = ix1 + Nx*iy2   # i1 = i + x + 2y  |   /
+
+                bond2s[0, i + 8*N] = i             # i0 = i            / 
+                bond2s[1, i + 8*N] = ix2 + Nx*iy2  # i1 = i + 2x + 2y /
+
+                bond2s[0, i + 9*N] = ix2 + Nx*iy   # i0 = i + 2x     _
+                bond2s[1, i + 9*N] = ix + Nx*iy1   # i1 = i + y   \_  \
+
+                bond2s[0, i + 10*N] = ix1 + Nx*iy   # i0 = i + x    \  |
+                bond2s[1, i + 10*N] = ix + Nx*iy2   # i1 = i + 2y    |  \
+
+                bond2s[0, i + 11*N] = ix2 + Nx*iy   # i0 = i + 2x    \
+                bond2s[1, i + 11*N] = ix + Nx*iy2   # i1 = i + 2y     \
+
     # 2 2-bond mapping
     num_b2b2 = b2ps*b2ps*N
     map_b2b2 = np.zeros((num_b2, num_b2), dtype=np.int32)
@@ -228,7 +239,7 @@ def create_1(file_sim=None, file_params=None, overwrite=False, seed=None,
                             map_bb2[j + N*jj, i + N*ii] = kk
                             degen_bb2[kk] += 1
                             
-    # bond 2-bond mapping
+    # 2-bond bond mapping
     num_b2b = b2ps*bps*N
     map_b2b = np.zeros((num_b2, num_b), dtype=np.int32)
     degen_b2b = np.zeros(num_b2b, dtype = np.int32)
@@ -362,7 +373,7 @@ def create_1(file_sim=None, file_params=None, overwrite=False, seed=None,
         f.create_group("state")
         f["state"]["sweep"] = np.array(0, dtype=np.int32)
         f["state"]["init_rng"] = init_rng # save if need to replicate data
-        f["state"]["rng"] = init_rng
+        f["state"]["rng"] = rng
         f["state"]["hs"] = init_hs
 
         # measurements
@@ -399,11 +410,16 @@ def create_1(file_sim=None, file_params=None, overwrite=False, seed=None,
                 f["meas_uneqlt"]["kk"] = np.zeros(num_bb*L, dtype=np.float64)
                 f["meas_uneqlt"]["ksks"] = np.zeros(num_bb*L, dtype=np.float64)
             if meas_thermal:
+                # "jjn" and "jnj" accumulators includes jxding's
+                # j-jn,j2-jn, jn-j, jn-j2 terms
                 f["meas_uneqlt"]["jjn"] = np.zeros(num_bb2*L, dtype=np.float64)
                 f["meas_uneqlt"]["jnj"] = np.zeros(num_b2b*L, dtype=np.float64)
+                #same as jxding's jnjn terms
                 f["meas_uneqlt"]["jnjn"] = np.zeros(num_bb*L, dtype=np.float64)
             if meas_2bond_corr:
                 f["meas_uneqlt"]["pair_b2b2"] = np.zeros(num_b2b2*L, dtype=np.float64)
+                # "j2j2" accumulator includes jxding's
+                # j2-j2, j2-j, j-j2, jj terms
                 f["meas_uneqlt"]["j2j2"] = np.zeros(num_b2b2*L, dtype=np.float64)
                 f["meas_uneqlt"]["js2js2"] = np.zeros(num_b2b2*L, dtype=np.float64)
                 f["meas_uneqlt"]["k2k2"] = np.zeros(num_b2b2*L, dtype=np.float64)
@@ -424,7 +440,8 @@ def create_batch(Nfiles=1, prefix=None, seed=None, **kwargs):
         seed = int(time.time())
     if prefix is None:
         prefix = str(seed)
-    rng = rand_seed(seed)
+    init_rng = rand_seed(seed)
+    print(init_rng)
 
     file_0 = "{}_{}.h5".format(prefix, 0)
     file_p = "{}.h5.params".format(prefix)
@@ -435,19 +452,20 @@ def create_batch(Nfiles=1, prefix=None, seed=None, **kwargs):
          L = f["params"]["L"][...]
 
     for i in range(1, Nfiles):
-        rand_jump(rng)
-        init_rng = rng.copy()
+        rand_jump(init_rng)
+        rng = init_rng.copy()
         init_hs = np.zeros((L, N), dtype=np.int32)
 
         for l in range(L):
             for r in range(N):
-                init_hs[l, r] = rand_uint(init_rng) >> np.uint64(63)
+                init_hs[l, r] = rand_uint(rng) >> np.uint64(63)
 
         file_i = "{}_{}.h5".format(prefix, i)
         shutil.copy2(file_0, file_i)
         with h5py.File(file_i, "r+") as f:
+            print(init_rng)
             f["state"]["init_rng"][...] = init_rng
-            f["state"]["rng"][...] = init_rng
+            f["state"]["rng"][...] = rng
             f["state"]["hs"][...] = init_hs
     print("created simulation files:",
           file_0 if Nfiles == 1 else "{} ... {}".format(file_0, file_i))
