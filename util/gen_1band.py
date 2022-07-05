@@ -441,7 +441,7 @@ def create_batch(Nfiles=1, prefix=None, seed=None, **kwargs):
     if prefix is None:
         prefix = str(seed)
     init_rng = rand_seed(seed)
-    print(init_rng)
+#    print(init_rng)
 
     file_0 = "{}_{}.h5".format(prefix, 0)
     file_p = "{}.h5.params".format(prefix)
