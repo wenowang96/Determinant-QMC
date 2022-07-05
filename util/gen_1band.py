@@ -463,7 +463,7 @@ def create_batch(Nfiles=1, prefix=None, seed=None, **kwargs):
         file_i = "{}_{}.h5".format(prefix, i)
         shutil.copy2(file_0, file_i)
         with h5py.File(file_i, "r+") as f:
-            print(init_rng)
+#            print(init_rng)
             f["state"]["init_rng"][...] = init_rng
             f["state"]["rng"][...] = rng
             f["state"]["hs"][...] = init_hs
