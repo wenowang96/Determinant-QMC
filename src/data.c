@@ -253,7 +253,6 @@ int sim_data_save(const struct sim_data *sim, const char *file)
 		my_write("/meas_eqlt/vn", H5T_NATIVE_DOUBLE, sim->m_eq.vn);
 	}
 	if (sim->p.period_uneqlt > 0) {
-		my_write("/meas_uneqlt/n_sample", H5T_NATIVE_INT,    &sim->m_ue.n_sample);
 		my_write("/meas_uneqlt/sign",     H5T_NATIVE_DOUBLE, &sim->m_ue.sign);
 		my_write("/meas_uneqlt/gt0",      H5T_NATIVE_DOUBLE,  sim->m_ue.gt0);
 		my_write("/meas_uneqlt/nn",       H5T_NATIVE_DOUBLE,  sim->m_ue.nn);
@@ -289,6 +288,7 @@ int sim_data_save(const struct sim_data *sim, const char *file)
 			my_write("/meas_uneqlt/nem_nnnn", H5T_NATIVE_DOUBLE, sim->m_ue.nem_nnnn);
 			my_write("/meas_uneqlt/nem_ssss", H5T_NATIVE_DOUBLE, sim->m_ue.nem_ssss);
 		}
+		my_write("/meas_uneqlt/n_sample", H5T_NATIVE_INT,    &sim->m_ue.n_sample);
 	}
 
 #undef my_write
