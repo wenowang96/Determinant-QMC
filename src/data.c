@@ -233,10 +233,10 @@ int sim_data_save(const struct sim_data *sim, const char *file)
 	return_if(status < 0, -1, "H5Dclose() failed for %s: %d\n", name, status); \
 } while (0);
 
+	my_write("/meas_eqlt/n_sample",   H5T_NATIVE_INT,    &sim->m_eq.n_sample);
 	my_write("/state/rng",            H5T_NATIVE_UINT64,  sim->s.rng);
 	my_write("/state/sweep",          H5T_NATIVE_INT,    &sim->s.sweep);
 	my_write("/state/hs",             H5T_NATIVE_INT,     sim->s.hs);
-	my_write("/meas_eqlt/n_sample",   H5T_NATIVE_INT,    &sim->m_eq.n_sample);
 	my_write("/meas_eqlt/sign",       H5T_NATIVE_DOUBLE, &sim->m_eq.sign);
 	my_write("/meas_eqlt/density",    H5T_NATIVE_DOUBLE,  sim->m_eq.density);
 	my_write("/meas_eqlt/double_occ", H5T_NATIVE_DOUBLE,  sim->m_eq.double_occ);
